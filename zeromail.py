@@ -24,7 +24,6 @@ def get_secrets(from_date_added=0):
             secrets.append([aes_key, json_id])
         from_date_added = max(from_date_added, date_added)
     return (secrets, from_date_added)
-
 def update_secrets():
     import json
 
@@ -47,15 +46,40 @@ def update_secrets():
 
     return secrets
 
-def get_messages(secrets):
+def get_messages(secrets, from_date_added=0):
+    date_added = 0
+
     res = []
     for s in secrets:
         aes_key, json_id = s[0], s[1]
-        messages = c.execute('SELECT encrypted FROM message WHERE json_id = ? ORDER BY date_added DESC', (json_id,))
+        messages = c.execute('SELECT encrypted, date_added FROM message WHERE json_id = ? AND date_added > %s ORDER BY date_added DESC' % from_date_added, (json_id,))
         for m in messages:
             message = m[0].split(',')
             iv, encrypted_text = message[0], message[1]
             result = cryptlib.aesDecrypt(iv, encrypted_text, aes_key)
             if result != None:
                 res.append(result)
-    return res
+            date_added = max(date_added, m[1])
+
+    return (res, date_added)
+def update_messages(secrets):
+    import json
+
+    old_messages = []
+    from_date_added = 0
+    try:
+        with open(current_directory + "/messages.cache.json", "r") as f:
+            cache = json.loads(f.read())
+            old_messages = cache["messages"]
+            from_date_added = cache["date_added"]
+    except:
+        pass
+
+    new_messages, date_added = get_messages(secrets, from_date_added)
+    messages = old_messages + new_messages
+
+    with open(current_directory + "/messages.cache.json", "w") as f:
+        cache = dict(messages=messages, date_added=date_added)
+        f.write(json.dumps(cache))
+
+    return messages

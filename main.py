@@ -46,7 +46,7 @@ zeromail.connect(zeronet_directory, pub=publickey, priv=privatekey)
 print "Updating secrets..."
 secrets = zeromail.update_secrets()
 
-print "Loading messages..."
-messages = zeromail.get_messages(secrets)
+print "Updating messages..."
+messages = zeromail.update_messages(secrets)
 for message in messages:
     print message
