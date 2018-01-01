@@ -23,9 +23,10 @@ try:
         zeromail = user["sites"]["1MaiL5gfBM1cyb4a8e3iiL8L5gXmoAJu27"]
         keyname = [key for key in zeromail.keys() if "encrypt_privatekey" in key][0]
         privatekey = zeromail[keyname]
-except:
+except Exception as e:
     if zeroid is None:
         print "Could not load ZeroID address"
+	print e
         sys.exit(1)
 
     privatekey = raw_input("ZeroMail private key:")
