@@ -43,8 +43,8 @@ except:
 import zeromail
 zeromail.connect(zeronet_directory, pub=publickey, priv=privatekey)
 
-print "Loading secrets..."
-secrets = zeromail.get_secrets()
+print "Updating secrets..."
+secrets = zeromail.update_secrets()
 
 print "Loading messages..."
 messages = zeromail.get_messages(secrets)
