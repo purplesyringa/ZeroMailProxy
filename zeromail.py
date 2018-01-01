@@ -1,11 +1,15 @@
 import sqlite3, cryptlib
 
-pubkey = '' # <-- Add pub_key here
-privkey = '' # <-- Add encrypted_private_key here
+pubkey = None
+privkey = None
 
 conn = None
 c = None
-def connect(zeronet_directory):
+def connect(zeronet_directory, pub, priv):
+    global pubkey, privkey
+    pubkey = pub
+    privkey = priv
+
     global conn, c
     conn = sqlite3.connect(zeronet_directory + 'data/1MaiL5gfBM1cyb4a8e3iiL8L5gXmoAJu27/data/users/zeromail.db')
     c = conn.cursor()

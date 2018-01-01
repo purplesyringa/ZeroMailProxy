@@ -10,7 +10,7 @@ sys.path.insert(0, os.path.join(zeronet_directory, "src"))  # Imports relative t
 
 import zeromail
 
-zeromail.connect(zeronet_directory)
+zeromail.connect(zeronet_directory, pub="", priv="")
 
 print "Loading secrets..."
 secrets = zeromail.get_secrets()
