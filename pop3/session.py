@@ -23,7 +23,7 @@ class Session(object):
 	def init(self):
 		debug("New session")
 
-		self.ok("POP3 ZeroMail ready")
+		self.ok("POP3 server ready")
 
 		while True:
 			data = self.recvall()
