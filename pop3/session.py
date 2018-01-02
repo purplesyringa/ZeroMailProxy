@@ -1,4 +1,4 @@
-from util import debug, critical
+from util import debug, critical, ServerError, CommandError
 import time
 
 class Session(object):
@@ -28,39 +28,39 @@ class Session(object):
 			args = data.split(None)[1:]
 
 			name = "command" + command[0].upper() + command[1:].lower()
-			if name in dir(self):
-				getattr(self, name)(*args)
-			else:
-				self.err("unknown command " + command)
+
+			try:
+				if name in dir(self):
+					self.ok(getattr(self, name)(*args))
+				else:
+					raise CommandError("Unknown command " + command)
+			except CommandError as e:
+				self.err(str(e))
+
 			time.sleep(0.5)
 
 	def commandAuth(self):
-		self.err("AUTH not supported, use USER and PASS")
+		raise CommandError("AUTH not supported, use USER and PASS")
 
 	def commandCapa(self):
-		self.err("CAPA not supported")
+		raise CommandError("CAPA not supported")
 
 	def commandUser(self, user):
 		if self.auth["user"] is not None:
-			self.err("USER twice")
-			return
+			raise CommandError("USER twice")
 		elif self.state != "auth":
-			self.err("Current state is not AUTH")
-			return
+			raise CommandError("Current state is not AUTH")
 
 		self.auth["user"] = user
-		self.ok("User OK")
+		return "User OK"
 	def commandPass(self, password):
 		if self.auth["password"] is not None:
-			self.err("PASS twice")
-			return
+			raise CommandError("PASS twice")
 		elif self.auth["user"] is None:
-			self.err("PASS before USER")
-			return
+			raise CommandError("PASS before USER")
 		elif self.state != "auth":
-			self.err("Current state is not AUTH")
-			return
+			raise CommandError("Current state is not AUTH")
 
 		self.auth["password"] = password
 		self.state = "tran"
-		self.ok("Password OK")
+		return "Password OK"

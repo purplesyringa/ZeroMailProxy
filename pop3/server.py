@@ -1,9 +1,6 @@
 import socket
-from util import debug, critical
+from util import debug, critical, ServerError
 from connection import Connection
-
-class ServerError(Exception):
-    pass
 
 class Server(object):
     def __init__(self, host, port, Session):

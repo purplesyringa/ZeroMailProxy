@@ -9,3 +9,9 @@ def critical(s, *args):
 		print "[critical] %s" % (s % args)
 	else:
 		print "[critical] %s" % s
+
+
+class ServerError(Exception):
+    pass
+class CommandError(Exception):
+	pass
