@@ -1,4 +1,4 @@
-import socket, traceback
+import socket, traceback, threading
 from util import debug, critical, ServerError
 from connection import Connection
 
@@ -20,11 +20,10 @@ class Server(object):
             while True:
                 self.sock.listen(1)
                 conn, addr = self.sock.accept()
-                try:
-                    conn = Connection(conn)
-                    session = self.Session(conn)
-                finally:
-                    conn.close()
+
+                thread = threading.Thread(target=self.run, args=(conn,))
+                thread.start()
+                thread.join()
         except (SystemExit, KeyboardInterrupt):
             debug("Server quit")
         except Exception as e:
@@ -33,3 +32,10 @@ class Server(object):
             self.sock.shutdown(socket.SHUT_RDWR)
             self.sock.close()
             self.sock = None
+
+    def run(self, conn):
+        try:
+            conn = Connection(conn)
+            session = self.Session(conn)
+        finally:
+            conn.close()

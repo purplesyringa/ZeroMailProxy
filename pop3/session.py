@@ -21,6 +21,8 @@ class Session(object):
 		self.sendall("-ERR %s" % s)
 
 	def init(self):
+		debug("New session")
+
 		self.ok("POP3 ZeroMail ready")
 
 		while True:
@@ -31,6 +33,7 @@ class Session(object):
 
 			if command.upper() == "QUIT":
 				self.ok("Bye")
+				debug("Session end")
 				break
 
 			name = "command" + command[0].upper() + command[1:].lower()
