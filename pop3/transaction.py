@@ -33,3 +33,15 @@ class Transaction(object):
 			return self.formatUidl(message)
 	def formatUidl(self, message):
 		return str(message) + " zeromail" + str(message)
+
+	def commandRetr(self, message):
+		message = int(message)
+
+		try:
+			message = self.mailbox[message]
+			return "Message follows\r\n" + self.escape(str(message)) + "\r\n.\r\n"
+		except KeyError:
+			raise CommandError("Unknown message " + str(message))
+
+	def escape(self, s):
+		return "\r\n".join(["." + line if line[0] == "." else line for line in s.split("\r\n")])
