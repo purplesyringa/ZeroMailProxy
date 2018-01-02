@@ -1,6 +1,9 @@
+from util import debug, critical
+
 class Session(object):
 	def __init__(self, conn):
 		self.conn = conn
+		self.state = "auth"
 		self.init()
 
 	def sendall(self, *args, **kwargs):
@@ -18,4 +21,16 @@ class Session(object):
 
 		while True:
 			data = self.recvall()
-			self.err("unknown command")
+
+			command = data.split(None, 1)[0]
+			args = data.split(None, 1)[1] if len(data.split(None, 1)) == 2 else []
+
+			name = "command" + command[0].upper() + command[1:].lower()
+			if name in dir(self):
+				self[name](*args)
+			else:
+				critical("unknown command " + command)
+				self.err("unknown command " + command)
+
+	def commandAuth():
+		debug("Open AUTH")
