@@ -5,6 +5,7 @@ class Session(object):
 	def __init__(self, conn):
 		self.conn = conn
 		self.state = "auth"
+		self.auth = dict(user=None, password=None)
 		self.init()
 
 	def sendall(self, *args, **kwargs):
@@ -33,5 +34,33 @@ class Session(object):
 				self.err("unknown command " + command)
 			time.sleep(0.5)
 
-	def commandAuth():
-		debug("Open AUTH")
+	def commandAuth(self):
+		self.err("AUTH not supported, use USER and PASS")
+
+	def commandCapa(self):
+		self.err("CAPA not supported")
+
+	def commandUser(self, user):
+		if self.auth["user"] is not None:
+			self.err("USER twice")
+			return
+		elif self.state != "auth":
+			self.err("Current state is not AUTH")
+			return
+
+		self.auth["user"] = user
+		self.ok("User OK")
+	def commandPass(self, password):
+		if self.auth["password"] is not None:
+			self.err("PASS twice")
+			return
+		elif self.auth["user"] is None:
+			self.err("PASS before USER")
+			return
+		elif self.state != "auth":
+			self.err("Current state is not AUTH")
+			return
+
+		self.auth["password"] = password
+		self.state = "tran"
+		self.ok("Password OK")
