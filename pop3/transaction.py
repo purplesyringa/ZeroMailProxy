@@ -31,7 +31,7 @@ class Transaction(object):
 		elif self.mailbox.hasMessage(message):
 			return self.formatUidl(message)
 	def formatUidl(self, message):
-		return str(message) + " zeromail" + str(message)
+		return str(message) + " " + self.mailbox[message].uidl()
 
 	def commandRetr(self, message):
 		message = int(message)
