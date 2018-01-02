@@ -23,14 +23,13 @@ class Session(object):
 		while True:
 			data = self.recvall()
 
-			command = data.split(None, 1)[0]
-			args = data.split(None, 1)[1] if len(data.split(None, 1)) == 2 else []
+			command = data.split(None)[0]
+			args = data.split(None)[1:]
 
 			name = "command" + command[0].upper() + command[1:].lower()
 			if name in dir(self):
-				self[name](*args)
+				getattr(self, name)(*args)
 			else:
-				critical("unknown command " + command)
 				self.err("unknown command " + command)
 			time.sleep(0.5)
 
