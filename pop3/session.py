@@ -1,4 +1,5 @@
 from util import debug, critical
+import time
 
 class Session(object):
 	def __init__(self, conn):
@@ -31,6 +32,7 @@ class Session(object):
 			else:
 				critical("unknown command " + command)
 				self.err("unknown command " + command)
+			time.sleep(0.5)
 
 	def commandAuth():
 		debug("Open AUTH")
