@@ -1,4 +1,4 @@
-from message import Message
+from pop3.message import Message
 
 MESSAGE = "From: Me <me@zeromail.bit>\r\nTo: Wow <wow@zeromail.bit>\r\nSubject: Hello\r\nDate: Fri, 21 Nov 1997 09:55:06 -0600\r\nMessage-ID: zeromail0\r\n\r\nHello!\r\n"
 
