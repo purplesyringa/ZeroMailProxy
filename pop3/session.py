@@ -52,8 +52,6 @@ class Session(object):
 			except CommandError as e:
 				self.err(str(e))
 
-			time.sleep(0.5)
-
 	def commandAuth(self):
 		raise CommandError("AUTH not supported, use USER and PASS")
 
