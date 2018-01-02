@@ -1,6 +1,6 @@
 import os, sys
 
-zeronet_directory = "C:\\Users\\Ivanq\\Documents\\ZeroNet\\" # <-- Change me depending on OS/Package settings
+from config import zeronet_directory
 
 # Load ZeroNet plugins
 os.chdir(zeronet_directory)
