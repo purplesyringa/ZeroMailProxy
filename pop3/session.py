@@ -29,6 +29,10 @@ class Session(object):
 			command = data.split(None)[0]
 			args = data.split(None)[1:]
 
+			if command.upper() == "QUIT":
+				self.ok("Bye")
+				break
+
 			name = "command" + command[0].upper() + command[1:].lower()
 
 			try:
