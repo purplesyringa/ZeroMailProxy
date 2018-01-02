@@ -32,10 +32,16 @@ class Session(object):
 			name = "command" + command[0].upper() + command[1:].lower()
 
 			try:
-				if name in dir(self):
-					self.ok(getattr(self, name)(*args))
-				else:
-					raise CommandError("Unknown command " + command)
+				if self.state == "auth":
+					if name in dir(self):
+						self.ok(getattr(self, name)(*args))
+					else:
+						raise CommandError("Unknown command " + command)
+				elif self.state == "tran":
+					if name in dir(self.transaction):
+						self.ok(getattr(self.transaction, name)(*args))
+					else:
+						raise CommandError("Unknown command " + command)
 			except CommandError as e:
 				self.err(str(e))
 
