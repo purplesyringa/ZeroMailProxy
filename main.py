@@ -40,6 +40,10 @@ try:
 except:
     publickey = raw_input("ZeroMail public key:")
 
+print "Access using"
+print "Public key:", publickey
+print "Private key:", privatekey
+
 import zeromail
 zeromail.connect(zeronet_directory, pub=publickey, priv=privatekey)
 
