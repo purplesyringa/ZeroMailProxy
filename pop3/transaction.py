@@ -1,3 +1,5 @@
+SEP = "\r\n"
+
 from util import debug, critical, ServerError, CommandError
 from mailbox import Mailbox
 
@@ -11,8 +13,23 @@ class Transaction(object):
 	def commandList(self, message=None):
 		if message is None:
 			ids = self.mailbox.getMessageIds()
-			messages = [str(message) + " " + str(len(self.mailbox[message])) for message in ids]
-			messages = "\r\n".join(messages)
-			return "messages follow\r\n" + messages + "\r\n."
+			messages = [self.formatList(message) for message in ids]
+			messages = SEP.join(messages)
+			octets = sum([len(self.mailbox[message]) for message in ids])
+			return str(len(ids)) + " messages (" + str(octets) + " octets)" + SEP + messages + SEP + "."
 		elif self.mailbox.hasMessage(message):
-			return str(message) + " " + str(len(self.mailbox[message]))
+			return self.formatList(message)
+	def formatList(self, message):
+		return str(message) + " " + str(len(self.mailbox[message]))
+
+	def commandUidl(self, message=None):
+		if message is None:
+			ids = self.mailbox.getMessageIds()
+			messages = [self.formatUidl(message) for message in ids]
+			messages = SEP.join(messages)
+			octets = sum([len(self.mailbox[message]) for message in ids])
+			return str(len(ids)) + " messages (" + str(octets) + " octets)" + SEP + messages + SEP + "."
+		elif self.mailbox.hasMessage(message):
+			return self.formatUidl(message)
+	def formatUidl(self, message):
+		return str(message) + " zeromail" + str(message)

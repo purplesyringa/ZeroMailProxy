@@ -13,6 +13,6 @@ class Mailbox(object):
 		return sum([len(message) for message in self.messages])
 
 	def getMessageIds(self):
-		return range(len(self.messages))
+		return range(1, len(self.messages) + 1)
 	def __getitem__(self, message):
-		return self.messages[message]
+		return self.messages[message - 1]
