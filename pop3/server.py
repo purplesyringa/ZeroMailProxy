@@ -22,8 +22,8 @@ class Server(object):
                 conn, addr = self.sock.accept()
 
                 thread = threading.Thread(target=self.run, args=(conn,))
+                thread.daemon = True
                 thread.start()
-                thread.join()
         except (SystemExit, KeyboardInterrupt):
             debug("Server quit")
         except Exception as e:
