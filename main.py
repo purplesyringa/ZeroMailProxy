@@ -48,5 +48,5 @@ secrets = zeromail.update_secrets()
 
 print "Updating messages..."
 messages = zeromail.update_messages(secrets)
-for message in messages:
-    print message
+for date, message in messages.items():
+    print date, message
