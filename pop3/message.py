@@ -4,3 +4,6 @@ class Message(object):
 
 	def __len__(self):
 		return len(self.data)
+
+	def __str__(self):
+		return self.data

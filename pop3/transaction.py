@@ -44,4 +44,4 @@ class Transaction(object):
 			raise CommandError("Unknown message " + str(message))
 
 	def escape(self, s):
-		return "\r\n".join(["." + line if line[0] == "." else line for line in s.split("\r\n")])
+		return "\r\n".join(["." + line if len(line) > 0 and line[0] == "." else line for line in s.split("\r\n")])
