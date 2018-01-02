@@ -14,7 +14,7 @@ class Mailbox(object):
 	def load_messages(self):
 		secrets = zeromail.update_secrets()
 		messages = zeromail.update_messages(secrets)
-		messages = {message: Message(data) for message, data in messages.iteritems()}
+		messages = {date: Message(int(date), data) for date, data in messages.iteritems()}
 		return messages
 
 	def messageCount(self):
