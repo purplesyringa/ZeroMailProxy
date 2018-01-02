@@ -1,12 +1,13 @@
 import socket, traceback, threading
 from util import debug, critical, ServerError
 from connection import Connection
+from session import Session
 
 class Server(object):
-    def __init__(self, host, port, Session):
+    def __init__(self, host, port, Mailbox):
         self.host = host
         self.port = port
-        self.Session = Session
+        self.Mailbox = Mailbox
         self.sock = None
 
     def serve(self):
@@ -36,6 +37,6 @@ class Server(object):
     def run(self, conn):
         try:
             conn = Connection(conn)
-            session = self.Session(conn)
+            session = Session(conn, Mailbox=self.Mailbox)
         finally:
             conn.close()

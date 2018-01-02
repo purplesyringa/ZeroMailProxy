@@ -3,10 +3,10 @@ import socket
 import sys
 
 from server import Server
-from session import Session
+from mailbox import Mailbox
 
 def serve(host, port):
-    server = Server(host, port, Session)
+    server = Server(host, port, Mailbox=Mailbox)
     server.serve()
 
 if __name__ == "__main__":

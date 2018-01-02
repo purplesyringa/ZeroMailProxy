@@ -3,8 +3,9 @@ from transaction import Transaction
 import time
 
 class Session(object):
-	def __init__(self, conn):
+	def __init__(self, conn, Mailbox):
 		self.conn = conn
+		self.Mailbox = Mailbox
 		self.state = "auth"
 		self.auth = dict(user=None, password=None)
 		self.transaction = None
@@ -76,5 +77,5 @@ class Session(object):
 
 		self.auth["password"] = password
 		self.state = "tran"
-		self.transaction = Transaction(user=self.auth["user"], password=self.auth["password"])
+		self.transaction = Transaction(user=self.auth["user"], password=self.auth["password"], Mailbox=self.Mailbox)
 		return "Password OK"

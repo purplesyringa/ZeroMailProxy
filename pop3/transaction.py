@@ -1,10 +1,9 @@
 SEP = "\r\n"
 
 from util import debug, critical, ServerError, CommandError
-from mailbox import Mailbox
 
 class Transaction(object):
-	def __init__(self, user, password):
+	def __init__(self, user, password, Mailbox):
 		self.mailbox = Mailbox(user, password)
 
 	def commandStat(self):
