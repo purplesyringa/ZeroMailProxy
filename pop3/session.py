@@ -1,4 +1,5 @@
 from util import debug, critical, ServerError, CommandError
+from transaction import Transaction
 import time
 
 class Session(object):
@@ -6,6 +7,7 @@ class Session(object):
 		self.conn = conn
 		self.state = "auth"
 		self.auth = dict(user=None, password=None)
+		self.transaction = None
 		self.init()
 
 	def sendall(self, *args, **kwargs):
@@ -63,4 +65,5 @@ class Session(object):
 
 		self.auth["password"] = password
 		self.state = "tran"
+		self.transaction = Transaction(user=self.auth["user"], password=self.auth["password"])
 		return "Password OK"

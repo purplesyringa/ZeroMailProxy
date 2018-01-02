@@ -1,4 +1,4 @@
-import socket
+import socket, traceback
 from util import debug, critical, ServerError
 from connection import Connection
 
@@ -28,7 +28,7 @@ class Server(object):
         except (SystemExit, KeyboardInterrupt):
             debug("Server quit")
         except Exception as e:
-            critical(e)
+            critical(traceback.format_exc())
         finally:
             self.sock.shutdown(socket.SHUT_RDWR)
             self.sock.close()
