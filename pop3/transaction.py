@@ -31,6 +31,8 @@ class Transaction(object):
 			return str(len(ids)) + " messages (" + str(octets) + " octets)" + SEP + messages + SEP + "."
 		elif message in self.mailbox:
 			return self.formatList(message)
+		else:
+			raise CommandError("Unknown message")
 	def formatList(self, message):
 		return str(message) + " " + str(len(self.mailbox[message]))
 
@@ -43,6 +45,8 @@ class Transaction(object):
 			return str(len(ids)) + " messages (" + str(octets) + " octets)" + SEP + messages + SEP + "."
 		elif message in self.mailbox:
 			return self.formatUidl(message)
+		else:
+			raise CommandError("Unknown message")
 	def formatUidl(self, message):
 		return str(message) + " " + self.mailbox[message].uidl()
 
@@ -56,6 +60,7 @@ class Transaction(object):
 			raise CommandError("Unknown message " + str(message))
 	def commandTop(self, message, lines):
 		message = int(message)
+		lines = int(lines)
 
 		try:
 			message = self.mailbox[message]

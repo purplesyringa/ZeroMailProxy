@@ -27,6 +27,7 @@ class Mailbox(object):
 				raise CommandError("Could not find user passwords")
 
 		self.zeromail = ZeroMail(zeronet_directory, zeroid=self.user, priv=self.password)
+		self.message_ids = dict()
 
 	def load_messages(self):
 		secrets = self.zeromail.update_secrets()
@@ -40,11 +41,14 @@ class Mailbox(object):
 		return sum([len(message) for message in self.load_messages()])
 
 	def getMessageIds(self):
-		return [str(int(key) % 1000000) for key in self.load_messages().keys()]
+		self.message_ids = dict(enumerate(self.load_messages().keys()))
+		return self.message_ids.keys()
 	def expandMessageId(self, message):
-		messages = self.load_messages()
-		ids = [cur for cur in messages if int(cur) % 1000000 == int(message)]
-		return ids[0] if len(ids) > 0 else None
+		self.load_messages()
+		try:
+			return self.message_ids[int(message)]
+		except KeyError:
+			return None
 
 	def __contains__(self, message):
 		messages = self.load_messages()
