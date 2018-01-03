@@ -1,4 +1,4 @@
-import sqlite3, cryptlib, os, json, base64, errno
+import sqlite3, cryptlib, os, json, base64, errno, time
 
 current_directory = os.path.dirname(os.path.realpath(__file__))
 
@@ -132,3 +132,20 @@ class ZeroMail(object):
 		if address in secrets_sent:
 			return secrets_sent[address].split(":", 1)[1]
 		return self.add_secret(address)
+
+	def send(self, address, subject, body, to):
+		secret = self.get_secret(address)
+		message = json.dumps(dict(subject=subject, body=body, to=to))
+		aes, iv, encrypted = cryptlib.aesEncrypt(message, secret)
+
+		data = None
+		with open(self.zeromail_data, "r") as f:
+			data = json.loads(f.read())
+		print data
+
+		date = int(time.time() * 1000)
+		data["message"][str(date)] = iv + "," + encrypted
+		data["date_added"] = int(time.time() * 1000)
+
+		with open(self.zeromail_data, "w") as f:
+			f.write(json.dumps(data))
