@@ -89,9 +89,9 @@ class Session(object):
 
 		self.transaction = Transaction(user, password, Mailbox=self.Mailbox, conn=self.conn)
 
-	def commandMail(self):
+	def commandMail(self, *args):
 		self.status(530, "Auth required")
-	def commandRcpt(self):
+	def commandRcpt(self, *args):
 		self.status(530, "Auth required")
-	def commandData(self):
+	def commandData(self, *args):
 		self.status(530, "Auth required")
