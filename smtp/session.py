@@ -57,6 +57,8 @@ class Session(object):
 
 		args = self.parseColon(args)
 		self.from_ = args["FROM"][1:-1]
+		self.to = []
+		self.data = ""
 
 		self.state = "awaitRcpt"
 		self.ok("Ready to accept recipients")
@@ -65,10 +67,10 @@ class Session(object):
 		assert self.state == "awaitRcpt"
 
 		args = self.parseColon(args)
-		self.to = args["TO"][1:-1]
+		self.to.append(args["TO"][1:-1])
 
 		self.state = "awaitRcpt"
-		self.ok(self.to + " ok")
+		self.ok(args["TO"][1:-1] + " ok")
 
 	def commandData(self, *args):
 		assert self.state == "awaitRcpt"
@@ -95,7 +97,7 @@ class Session(object):
 		print ""
 		print ""
 		print "From: " + from_
-		print "To: " + to
+		print "To: " + ", ".join(to)
 		print ""
 		print data
 		print ""
