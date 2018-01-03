@@ -15,15 +15,21 @@ class Message(object):
 	def __len__(self):
 		return len(str(self))
 
-	def __str__(self):
+	def headers(self):
 		return (
 			"From: " + self.from_ + "\r\n" +
 			"To: " + self.to + "\r\n" +
 			"Subject: " + self.subject + "\r\n" +
-			"Date: " + self.formatDate(self.date) + "\r\n" +
-			"\r\n" +
-			self.body
+			"Date: " + self.formatDate(self.date) + "\r\n"
 		)
+
+	def __str__(self):
+		return self.headers() + "\r\n" + self.body
+
+	def top(self, lines):
+		top = "\r\n".join(self.body.split("\r\n")[:lines])
+
+		return self.headers() + "\r\n" + top
 
 	def formatDate(self, timestamp):
 		date = datetime.datetime.fromtimestamp(timestamp / 1000)
