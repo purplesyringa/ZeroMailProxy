@@ -68,16 +68,11 @@ class Transaction(object):
 		else:
 			self.data += data + "\r\n"
 	def send(self, from_, to, data):
-		self.ok("Message sent")
-
-		print ""
-		print ""
-		print "From: " + from_
-		print "To: " + ", ".join(to)
-		print ""
-		print data
-		print ""
-		print ""
+		try:
+			self.mailbox.send(from_, to, data)
+			self.ok("Sent")
+		except CommandError as e:
+			self.status(450, str(e))
 
 	def parseColon(self, args):
 		res = dict()
