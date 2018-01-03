@@ -69,9 +69,32 @@ class Session(object):
 	def commandData(self, *args):
 		assert self.state == "awaitRcpt"
 		self.raw_handler = "handleData"
+		self.data = ""
 		self.status(354, "Intermediate reply")
 	def handleData(self, data):
+		if data == "":
+			self.data += "\r\n"
+		elif data == ".":
+			self.state = "awaitRcpt"
+			self.send(self.from_, self.to, self.data)
+			self.from_ = ""
+			self.to = ""
+			self.data = ""
+		elif data[0] == ".":
+			self.data += data[1:] + "\r\n"
+		else:
+			self.data += data + "\r\n"
+	def send(self, from_, to, data):
+		self.ok("Message sent")
+
+		print ""
+		print ""
+		print "From: " + from_
+		print "To: " + to
+		print ""
 		print data
+		print ""
+		print ""
 
 	def parseColon(self, args):
 		res = dict()
