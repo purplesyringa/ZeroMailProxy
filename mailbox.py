@@ -1,4 +1,4 @@
-import zeromail
+from zeromail import ZeroMail
 from message import Message
 from config import zeronet_directory
 
@@ -7,11 +7,11 @@ class Mailbox(object):
 		self.user = user
 		self.password = password
 
-		zeromail.connect(zeronet_directory, pub=user, priv=password)
+		self.zeromail = ZeroMail(zeronet_directory, pub=user, priv=password)
 
 	def load_messages(self):
-		secrets = zeromail.update_secrets()
-		messages = zeromail.update_messages(secrets)
+		secrets = self.zeromail.update_secrets()
+		messages = self.zeromail.update_messages(secrets)
 		messages = {date: Message(int(date), data) for date, data in messages.iteritems()}
 		return messages
 

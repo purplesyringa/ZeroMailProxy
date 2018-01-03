@@ -44,8 +44,8 @@ print "Access using"
 print "Public key:", publickey
 print "Private key:", privatekey
 
-import zeromail
-zeromail.connect(zeronet_directory, pub=publickey, priv=privatekey)
+from zeromail import ZeroMail
+zeromail = ZeroMail(zeronet_directory, pub=publickey, priv=privatekey)
 
 print "Updating secrets..."
 secrets = zeromail.update_secrets()
