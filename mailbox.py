@@ -43,8 +43,13 @@ class Mailbox(object):
 		return [str(int(key) % 1000000) for key in self.load_messages().keys()]
 	def expandMessageId(self, message):
 		messages = self.load_messages()
-		return [cur for cur in messages if int(cur) % 1000000 == int(message)][0]
+		ids = [cur for cur in messages if int(cur) % 1000000 == int(message)]
+		return ids[0] if len(ids) > 0 else None
 
+	def __contains__(self, message):
+		messages = self.load_messages()
+		message_id = self.expandMessageId(message)
+		return message_id is not None and message_id in messages
 	def __getitem__(self, message):
 		messages = self.load_messages()
 		return messages[self.expandMessageId(message)]
