@@ -5,6 +5,19 @@ from util import debug, critical, ServerError, CommandError
 class Transaction(object):
 	def __init__(self, user, password, Mailbox):
 		self.mailbox = Mailbox(user, password)
+		self.to_delete = []
+	def finish(self):
+		errs = 0
+		for message in self.to_delete:
+			try:
+				self.mailbox.pop(message)
+			except KeyError:
+				errs += 1
+
+		if errs == 0:
+			return "Transaction finished"
+		else:
+			raise CommandError("Finished with " + str(errs) + " delete errors")
 
 	def commandStat(self):
 		return str(self.mailbox.messageCount()) + " " + str(len(self.mailbox))
@@ -44,11 +57,8 @@ class Transaction(object):
 
 	def commandDele(self, message):
 		message = int(message)
-		try:
-			self.mailbox.pop(message)
-			return "Okay"
-		except KeyError:
-			raise CommandError("Message doesn't exist")
+		self.to_delete.append(message)
+		return "Okay"
 
 	def escape(self, s):
 		return "\r\n".join(["." + line if len(line) > 0 and line[0] == "." else line for line in s.split("\r\n")])

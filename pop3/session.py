@@ -32,26 +32,28 @@ class Session(object):
 			command = data.split(None)[0]
 			args = data.split(None)[1:]
 
-			if command.upper() == "QUIT":
-				self.ok("Bye")
-				debug("Session end")
-				break
-
 			name = "command" + command[0].upper() + command[1:].lower()
 
 			try:
 				if self.state == "auth":
 					if name in dir(self):
 						self.ok(getattr(self, name)(*args))
+					elif command.upper() == "QUIT":
+						self.ok("Bye")
 					else:
 						raise CommandError("Unknown command " + command)
 				elif self.state == "tran":
 					if name in dir(self.transaction):
 						self.ok(getattr(self.transaction, name)(*args))
+					elif command.upper() == "QUIT":
+						self.ok(self.transaction.finish())
 					else:
 						raise CommandError("Unknown command " + command)
 			except CommandError as e:
 				self.err(str(e))
+
+			if command.upper() == "QUIT":
+				break
 
 	def commandAuth(self):
 		raise CommandError("AUTH not supported, use USER and PASS")
