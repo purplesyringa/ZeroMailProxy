@@ -135,13 +135,12 @@ class ZeroMail(object):
 
 	def send(self, address, subject, body, to):
 		secret = self.get_secret(address)
-		message = json.dumps(dict(subject=subject, body=body, to=to))
+		message = json.dumps(dict(subject=subject, body=body, to=to + "@zeroid.bit"))
 		aes, iv, encrypted = cryptlib.aesEncrypt(message, secret)
 
 		data = None
 		with open(self.zeromail_data, "r") as f:
 			data = json.loads(f.read())
-		print data
 
 		date = int(time.time() * 1000)
 		data["message"][str(date)] = iv + "," + encrypted
@@ -149,3 +148,38 @@ class ZeroMail(object):
 
 		with open(self.zeromail_data, "w") as f:
 			f.write(json.dumps(data))
+
+		self.sign("1MaiL5gfBM1cyb4a8e3iiL8L5gXmoAJu27", "data/users/" + self.zeroid + "/content.json")
+
+	def sign(self, address, content):
+		import Config
+		Config.config.debug = False
+		Config.config.debug_gevent = False
+		Config.config.use_tempfiles = False
+		Config.config.data_dir = self.zeronet_directory.replace("\\", "/") + "data"
+		Config.config.db_mode = "speed"
+		Config.config.language = "en"
+		Config.config.fileserver_port = "3124"
+		Config.config.homepage = "1MaiL5gfBM1cyb4a8e3iiL8L5gXmoAJu27"
+		Config.config.disable_db = False
+		Config.config.verbose = False
+		Config.config.size_limit = 10
+
+		from Site import Site
+		site = Site(address, allow_create=False)
+
+		from User import UserManager
+		user = UserManager.user_manager.get()
+		if user:
+			privatekey = user.getAuthPrivatekey("1iD5ZQJMNXu43w1qLB8sfdHVKppVMduGz", create=False)
+			if privatekey is None:
+				raise TypeError("Could not find ZeroID private key")
+		else:
+			raise TypeError("Could not find ZeroID private key")
+
+		site.content_manager.sign(
+			inner_path=content,
+			privatekey=privatekey,
+			update_changed_files=True,
+			remove_missing_optional=False
+		)
