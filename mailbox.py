@@ -1,13 +1,40 @@
 from zeromail import ZeroMail
 from message import Message
 from config import zeronet_directory
+import zeronet
+from pop3.util import CommandError
 
 class Mailbox(object):
 	def __init__(self, user, password):
 		self.user = user
 		self.password = password
 
-		self.zeromail = ZeroMail(zeronet_directory, pub=user, priv=password)
+		if user == "local" and password == "local":
+			zeroid, self.password = zeronet.guess_private_key(zeronet_directory)
+			if zeroid is None:
+				raise CommandError("Failed to access users.json")
+			elif self.password is None:
+				raise CommandError("Could not find user passwords")
+
+			self.user = zeronet.guess_public_key(zeronet_directory, zeroid=zeroid)
+			if self.user is None:
+				raise CommandError("Could not find local user")
+		elif user == "local":
+			zeroid, _ = zeronet.guess_private_key(zeronet_directory)
+			if zeroid is None:
+				raise CommandError("Failed to access users.json")
+
+			self.user = zeronet.guess_public_key(zeronet_directory, zeroid=zeroid)
+			if self.user is None:
+				raise CommandError("Could not find local user")
+		elif password == "local":
+			zeroid, self.password = zeronet.guess_private_key(zeronet_directory)
+			if zeroid is None:
+				raise CommandError("Failed to access users.json")
+			elif self.password is None:
+				raise CommandError("Could not find user passwords")
+
+		self.zeromail = ZeroMail(zeronet_directory, pub=self.user, priv=self.password)
 
 	def load_messages(self):
 		secrets = self.zeromail.update_secrets()
