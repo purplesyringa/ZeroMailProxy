@@ -95,3 +95,7 @@ class Session(object):
 		self.status(530, "Auth required")
 	def commandData(self, *args):
 		self.status(530, "Auth required")
+	def commandRset(self):
+		self.ok("OK")
+	def commandNoop(self):
+		self.ok("OK")

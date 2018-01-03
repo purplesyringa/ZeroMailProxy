@@ -71,8 +71,16 @@ class Transaction(object):
 		try:
 			self.mailbox.send(from_, to, data)
 			self.ok("Sent")
+			self.state = "awaitMail"
 		except CommandError as e:
 			self.status(450, str(e))
+
+	def commandRset(self):
+		self.state = "awaitMail"
+		self.ok("OK")
+
+	def commandNoop(self):
+		self.ok("OK")
 
 	def parseColon(self, args):
 		res = dict()
