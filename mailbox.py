@@ -49,7 +49,14 @@ class Mailbox(object):
 
 	def getMessageIds(self):
 		return [str(int(key) % 1000000) for key in self.load_messages().keys()]
+	def expandMessageId(self, message):
+		messages = self.load_messages()
+		return [cur for cur in messages if int(cur) % 1000000 == int(message)][0]
+
 	def __getitem__(self, message):
 		messages = self.load_messages()
-		key = [cur for cur in messages if int(cur) % 1000000 == int(message)][0]
-		return messages[key]
+		return messages[self.expandMessageId(message)]
+
+	def pop(self, message):
+		secrets = self.zeromail.update_secrets()
+		self.zeromail.remove_message(secrets, self.expandMessageId(message))
