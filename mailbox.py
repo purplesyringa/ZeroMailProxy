@@ -10,23 +10,15 @@ class Mailbox(object):
 		self.password = password
 
 		if user == "local" and password == "local":
-			zeroid, self.password = zeronet.guess_private_key(zeronet_directory)
-			if zeroid is None:
+			self.user, self.password = zeronet.guess_private_key(zeronet_directory)
+			if self.user is None:
 				raise CommandError("Failed to access users.json")
 			elif self.password is None:
 				raise CommandError("Could not find user passwords")
-
-			self.user = zeronet.guess_public_key(zeronet_directory, zeroid=zeroid)
-			if self.user is None:
-				raise CommandError("Could not find local user")
 		elif user == "local":
-			zeroid, _ = zeronet.guess_private_key(zeronet_directory)
-			if zeroid is None:
-				raise CommandError("Failed to access users.json")
-
-			self.user = zeronet.guess_public_key(zeronet_directory, zeroid=zeroid)
+			self.user, _ = zeronet.guess_private_key(zeronet_directory)
 			if self.user is None:
-				raise CommandError("Could not find local user")
+				raise CommandError("Failed to access users.json")
 		elif password == "local":
 			zeroid, self.password = zeronet.guess_private_key(zeronet_directory)
 			if zeroid is None:
@@ -34,7 +26,7 @@ class Mailbox(object):
 			elif self.password is None:
 				raise CommandError("Could not find user passwords")
 
-		self.zeromail = ZeroMail(zeronet_directory, pub=self.user, priv=self.password)
+		self.zeromail = ZeroMail(zeronet_directory, zeroid=self.user, priv=self.password)
 
 	def load_messages(self):
 		secrets = self.zeromail.update_secrets()

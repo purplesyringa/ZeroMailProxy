@@ -22,20 +22,17 @@ import zeronet
 zeroid, privatekey = zeronet.guess_private_key(zeronet_directory)
 if zeroid is None:
 	print "Could not access users.json"
+	zeroid = raw_input("ZeroID:")
 	privatekey = raw_input("Private key:")
 elif privatekey is None:
+	print "ZeroID:", zeroid
 	privatekey = raw_input("Private key:")
 else:
+	print "ZeroID:", zeroid
 	print "Private key:", privatekey
 
-publickey = zeronet.guess_public_key(zeronet_directory, zeroid=zeroid)
-if publickey is None:
-	publickey = raw_input("Public key:")
-else:
-	print "Public key:", publickey
-
 from zeromail import ZeroMail
-zeromail = ZeroMail(zeronet_directory, pub=publickey, priv=privatekey)
+zeromail = ZeroMail(zeronet_directory, zeroid=zeroid, priv=privatekey)
 
 print "Updating secrets..."
 secrets = zeromail.update_secrets()

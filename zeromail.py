@@ -4,12 +4,12 @@ current_directory = os.path.dirname(os.path.realpath(__file__))
 
 
 class ZeroMail(object):
-	def __init__(self, zeronet_directory, pub, priv):
+	def __init__(self, zeronet_directory, zeroid, priv):
 		self.zeronet_directory = zeronet_directory
-		self.pubkey = pub
+		self.zeroid = zeroid
 		self.privkey = priv
 
-		self.cache_directory = current_directory + "/cache/" + base64.b64encode(pub)
+		self.cache_directory = current_directory + "/cache/" + base64.b64encode(zeroid)
 		try:
 			os.makedirs(self.cache_directory)
 		except OSError as e:
