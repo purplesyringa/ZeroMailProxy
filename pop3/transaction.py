@@ -59,6 +59,9 @@ class Transaction(object):
 		message = int(message)
 		self.to_delete.append(message)
 		return "Okay"
+	def commandRset(self):
+		self.to_delete = []
+		return "Think before doing next time"
 
 	def commandNoop(self):
 		return "Ping-pong"
