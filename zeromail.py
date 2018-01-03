@@ -9,6 +9,7 @@ class ZeroMail(object):
 		self.zeroid = zeroid
 		self.privkey = priv
 
+		self.zeromail_data = zeronet_directory + "data/1MaiL5gfBM1cyb4a8e3iiL8L5gXmoAJu27/data/users/" + zeroid + "/data.json"
 		self.cache_directory = current_directory + "/cache/" + base64.b64encode(zeroid)
 		try:
 			os.makedirs(self.cache_directory)
@@ -116,3 +117,13 @@ class ZeroMail(object):
 		with open(self.cache_directory + "/messages.json", "w") as f:
 			cache = dict(messages=messages, date_added=date_added)
 			f.write(json.dumps(cache))
+
+	def load_secrets_sent(self):
+		data = None
+		with open(self.zeromail_data, "r") as f:
+			data = json.loads(f.read())
+
+		secrets_sent = data["secrets_sent"]
+		secrets_sent = cryptlib.eciesDecrypt(secrets_sent, self.privkey)
+		secrets_sent = json.loads(secrets_sent)
+		return secrets_sent
