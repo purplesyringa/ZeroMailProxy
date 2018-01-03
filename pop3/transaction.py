@@ -60,5 +60,8 @@ class Transaction(object):
 		self.to_delete.append(message)
 		return "Okay"
 
+	def commandNoop(self):
+		return "Ping-pong"
+
 	def escape(self, s):
 		return "\r\n".join(["." + line if len(line) > 0 and line[0] == "." else line for line in s.split("\r\n")])
