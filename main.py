@@ -14,31 +14,31 @@ import json
 zeroid = None
 privatekey = None
 try:
-    with open(zeronet_directory + "data/users.json", "r") as f:
-        users = json.loads(f.read())
-        user = users[users.keys()[0]]
+	with open(zeronet_directory + "data/users.json", "r") as f:
+		users = json.loads(f.read())
+		user = users[users.keys()[0]]
 
-        zeroid = user["certs"]["zeroid.bit"]["auth_address"]
+		zeroid = user["certs"]["zeroid.bit"]["auth_address"]
 
-        zeromail = user["sites"]["1MaiL5gfBM1cyb4a8e3iiL8L5gXmoAJu27"]
-        keyname = [key for key in zeromail.keys() if "encrypt_privatekey" in key][0]
-        privatekey = zeromail[keyname]
+		zeromail = user["sites"]["1MaiL5gfBM1cyb4a8e3iiL8L5gXmoAJu27"]
+		keyname = [key for key in zeromail.keys() if "encrypt_privatekey" in key][0]
+		privatekey = zeromail[keyname]
 except Exception as e:
-    if zeroid is None:
-        print "Could not load ZeroID address"
-	print e
-        sys.exit(1)
+	if zeroid is None:
+		print "Could not load ZeroID address"
+		print e
+		sys.exit(1)
 
-    privatekey = raw_input("ZeroMail private key:")
+	privatekey = raw_input("ZeroMail private key:")
 
 # Guess public key
 publickey = None
 try:
-    with open(zeronet_directory + "data/1MaiL5gfBM1cyb4a8e3iiL8L5gXmoAJu27/data/users/" + zeroid + "/data.json") as f:
-        data = json.loads(f.read())
-        publickey = data["publickey"]
+	with open(zeronet_directory + "data/1MaiL5gfBM1cyb4a8e3iiL8L5gXmoAJu27/data/users/" + zeroid + "/data.json") as f:
+		data = json.loads(f.read())
+		publickey = data["publickey"]
 except:
-    publickey = raw_input("ZeroMail public key:")
+	publickey = raw_input("ZeroMail public key:")
 
 print "Access using"
 print "Public key:", publickey
@@ -53,4 +53,4 @@ secrets = zeromail.update_secrets()
 print "Updating messages..."
 messages = zeromail.update_messages(secrets)
 for date, message in messages.items():
-    print date, message
+	print date, message

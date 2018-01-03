@@ -12,6 +12,6 @@ def critical(s, *args):
 
 
 class ServerError(Exception):
-    pass
+	pass
 class CommandError(Exception):
 	pass
