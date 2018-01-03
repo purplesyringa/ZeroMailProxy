@@ -48,7 +48,7 @@ class ZeroMail(object):
 		return secrets
 
 	def get_messages(self, secrets, from_date_added=0):
-		date_added = 0
+		date_added = from_date_added
 
 		res = dict()
 		for s in secrets:
