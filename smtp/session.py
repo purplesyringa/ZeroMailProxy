@@ -6,6 +6,7 @@ class Session(object):
 	def __init__(self, conn, Mailbox):
 		self.conn = conn
 		self.state = None
+		self.raw_handler = None
 		self.init()
 
 	def sendall(self, *args, **kwargs):
@@ -27,16 +28,19 @@ class Session(object):
 		while True:
 			data = self.recvall()
 
-			command = data.split(None)[0]
-			args = data.split(None)[1:]
+			if self.raw_handler is None:
+				command = data.split(None)[0]
+				args = data.split(None)[1:]
 
-			name = "command" + command[0].upper() + command[1:].lower()
+				name = "command" + command[0].upper() + command[1:].lower()
 
-			try:
-				if name in dir(self):
-					getattr(self, name)(*args)
-			except AssertionError as e:
-				self.status(503, "bad sequence of commands")
+				try:
+					if name in dir(self):
+						getattr(self, name)(*args)
+				except AssertionError as e:
+					self.status(503, "bad sequence of commands")
+			else:
+				getattr(self, self.raw_handler)(data)
 
 	def commandEhlo(self, server):
 		assert self.state == "awaitEhlo"
@@ -64,9 +68,10 @@ class Session(object):
 
 	def commandData(self, *args):
 		assert self.state == "awaitRcpt"
-
-		self.state = "data"
+		self.raw_handler = "handleData"
 		self.status(354, "Intermediate reply")
+	def handleData(self, data):
+		print data
 
 	def parseColon(self, args):
 		res = dict()
