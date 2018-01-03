@@ -56,8 +56,16 @@ class Session(object):
 				getattr(handler, handler.raw_handler)(data)
 
 	def commandEhlo(self, server):
-		self.ok("SMTP server here")
+		self.ok_("SMTP server here")
+		self.ok("AUTH PLAIN")
+
+	def commandAuth(self, type, data):
+		if type.upper() != "PLAIN":
+			self.status(502, "Only AUTH PLAIN supported")
+			return
+
 		self.transaction = Transaction(self.conn)
+		self.ok("Auth ok")
 
 	def commandMail(self):
 		self.status(503, "Auth required")
