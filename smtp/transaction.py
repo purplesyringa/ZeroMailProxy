@@ -1,9 +1,14 @@
+from util import CommandError
+
 class Transaction(object):
 	def __init__(self, user, password, Mailbox, conn):
-		self.user = user
-		self.password = password
-		self.Mailbox = Mailbox
 		self.conn = conn
+
+		try:
+			self.mailbox = Mailbox(user, password)
+		except CommandError as e:
+			self.status(535, str(e))
+			return
 
 		self.raw_handler = None
 		self.state = "awaitMail"
