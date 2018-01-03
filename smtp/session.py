@@ -13,6 +13,8 @@ class Session(object):
 	def recvall(self, *args, **kwargs):
 		return self.conn.recvall(*args, **kwargs)
 
+	def ok(self, s):
+		self.status(250, s)
 	def status(self, status, s):
 		self.sendall("%s %s" % (status, s))
 
@@ -39,5 +41,5 @@ class Session(object):
 	def commandEhlo(self, server):
 		assert self.state == "awaitEhlo"
 
-		self.status(250, "SMTP server here")
-		self.status(250, "HELO")
+		self.state = "awaitMail"
+		self.ok("SMTP server here")
