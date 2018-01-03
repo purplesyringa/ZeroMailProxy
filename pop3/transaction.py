@@ -51,7 +51,7 @@ class Transaction(object):
 
 		try:
 			message = self.mailbox[message]
-			return "Message follows\r\n" + self.escape(str(message)) + "\r\n.\r\n"
+			return "Message follows\r\n" + self.escape(str(message)) + "\r\n."
 		except KeyError:
 			raise CommandError("Unknown message " + str(message))
 	def commandTop(self, message, lines):
@@ -59,7 +59,7 @@ class Transaction(object):
 
 		try:
 			message = self.mailbox[message]
-			return "Message top follows\r\n" + self.escape(message.top(lines)) + "\r\n.\r\n"
+			return "Message top follows\r\n" + self.escape(message.top(lines)) + "\r\n."
 		except KeyError:
 			raise CommandError("Unknown message " + str(message))
 
