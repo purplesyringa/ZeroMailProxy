@@ -4,26 +4,36 @@ class Connection(object):
 	END = "\r\n"
 	def __init__(self, conn):
 		self.conn = conn
+		self.awaiting = []
+		self.tmpAwaiting = ""
+
 	def __getattr__(self, name):
 		return getattr(self.conn, name)
+
 	def sendall(self, data, END=END):
 		debug("send: %r", data)
 
 		data += END
 		self.conn.sendall(data)
+
 	def recvall(self, END=END):
-		data = []
+		if len(self.awaiting) > 0:
+			data = self.awaiting.pop(0)
+			debug("recv: %r", "".join(data))
+			return data
+
 		while True:
 			chunk = self.conn.recv(4096)
-			if END in chunk:
-				data.append(chunk[:chunk.index(END)])
+			self.tmpAwaiting += chunk
+			if END in self.tmpAwaiting:
+				while END in self.tmpAwaiting:
+					self.awaiting.append(self.tmpAwaiting[:self.tmpAwaiting.index(END)])
+					self.tmpAwaiting = self.tmpAwaiting[self.tmpAwaiting.index(END) + len(END):]
 				break
-			data.append(chunk)
-			if len(data) > 1:
-				pair = data[-2] + data[-1]
-				if END in pair:
-					data[-2] = pair[:pair.index(END)]
-					data.pop()
-					break
-		debug("recv: %r", "".join(data))
-		return "".join(data)
+
+		if len(self.awaiting) > 0:
+			data = self.awaiting.pop(0)
+			debug("recv: %r", "".join(data))
+			return data
+
+		return None
