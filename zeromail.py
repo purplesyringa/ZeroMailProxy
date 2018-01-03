@@ -127,3 +127,8 @@ class ZeroMail(object):
 		secrets_sent = cryptlib.eciesDecrypt(secrets_sent, self.privkey)
 		secrets_sent = json.loads(secrets_sent)
 		return secrets_sent
+	def get_secret(self, address):
+		secrets_sent = self.load_secrets_sent()
+		if address in secrets_sent:
+			return secrets_sent[address].split(":", 1)[1]
+		return self.add_secret(address)
