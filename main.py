@@ -1,4 +1,12 @@
-import os, sys
+def formatDate(timestamp):
+	date = datetime.datetime.fromtimestamp(timestamp / 1000)
+
+	weekday = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"][date.weekday()]
+	month = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"][date.month - 1]
+	return "%s, %02d %s %04d %02d:%02d:%02d GMT" % (weekday, date.day, month, date.year, date.hour, date.minute, date.second)
+
+
+import os, sys, datetime, json
 
 from config import zeronet_directory
 
@@ -35,4 +43,13 @@ secrets = zeromail.update_secrets()
 print "Updating messages..."
 messages = zeromail.update_messages(secrets)
 for date, message in messages.items():
-	print date, message
+	data = json.loads(message["raw"])
+	print "Date: " + formatDate(int(date))
+	print "From: " + message["cert_user_id"]
+	print "To: " + data["to"]
+	print "Subject: " + data["subject"]
+	print ""
+	print data["body"]
+	print ""
+	print "---"
+	print ""

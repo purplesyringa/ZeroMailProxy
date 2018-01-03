@@ -53,13 +53,33 @@ class ZeroMail(object):
 		res = dict()
 		for s in secrets:
 			aes_key, json_id = s[0], s[1]
-			messages = self.cursor.execute('SELECT encrypted, date_added FROM message WHERE json_id = ? AND date_added > %s ORDER BY date_added DESC' % from_date_added, (json_id,))
+			messages = self.cursor.execute("""
+				SELECT
+					encrypted,
+					date_added,
+					keyvalue.value AS cert_user_id
+				FROM message
+
+				LEFT JOIN json
+				ON (message.json_id = json.json_id)
+
+				LEFT JOIN json AS json_content
+				ON (json.directory = json_content.directory AND json_content.file_name = "content.json")
+
+				LEFT JOIN keyvalue
+				ON (keyvalue.json_id = json_content.json_id)
+
+				WHERE
+					message.json_id = ? AND
+					date_added > ?
+				ORDER BY date_added DESC
+			""", (json_id, from_date_added))
 			for m in messages:
 				message = m[0].split(',')
 				iv, encrypted_text = message[0], message[1]
 				result = cryptlib.aesDecrypt(iv, encrypted_text, aes_key)
 				if result != None:
-					res[str(m[1])] = result
+					res[str(m[1])] = dict(raw=result, cert_user_id=m[2])
 				date_added = max(date_added, m[1])
 
 		return (res, date_added)

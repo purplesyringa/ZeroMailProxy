@@ -2,21 +2,22 @@ import hashlib, json, datetime
 
 class Message(object):
 	def __init__(self, date, data):
-		self.raw = data
+		self.raw = data["raw"]
 
-		data = json.loads(data)
+		raw = json.loads(self.raw)
 
 		self.date = date
-		self.body = data["body"]
-		self.to = data["to"]
-		self.subject = data["subject"]
+		self.body = raw["body"]
+		self.to = raw["to"]
+		self.from_ = data["cert_user_id"]
+		self.subject = raw["subject"]
 
 	def __len__(self):
 		return len(str(self))
 
 	def __str__(self):
 		return (
-			"From: anonymous@zeromail.bit\r\n" +
+			"From: " + self.from_ + "\r\n" +
 			"To: " + self.to + "\r\n" +
 			"Subject: " + self.subject + "\r\n" +
 			"Date: " + self.formatDate(self.date) + "\r\n" +
@@ -34,4 +35,4 @@ class Message(object):
 	def uidl(self):
 		md5 = hashlib.md5()
 		md5.update(str(self.date) + "|" + self.raw)
-		return md5.hexdigest()
+		return md5.hexdigest() + "|v2"
