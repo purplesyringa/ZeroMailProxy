@@ -43,3 +43,35 @@ class Session(object):
 
 		self.state = "awaitMail"
 		self.ok("SMTP server here")
+
+	def commandMail(self, *args):
+		assert self.state == "awaitMail"
+
+		args = self.parseColon(args)
+		self.from_ = args["FROM"][1:-1]
+
+		self.state = "awaitRcpt"
+		self.ok("Ready to accept recipients")
+
+	def commandRcpt(self, *args):
+		assert self.state == "awaitRcpt"
+
+		args = self.parseColon(args)
+		self.to = args["TO"][1:-1]
+
+		self.state = "awaitRcpt"
+		self.ok(self.to + " ok")
+
+	def commandData(self, *args):
+		assert self.state == "awaitRcpt"
+
+		self.state = "data"
+		self.status(354, "Intermediate reply")
+
+	def parseColon(self, args):
+		res = dict()
+		for arg in args:
+			key = arg.split(":", 1)[0]
+			value = arg.split(":", 1)[1]
+			res[key.upper()] = value
+		return res
