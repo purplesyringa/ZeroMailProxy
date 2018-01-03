@@ -8,41 +8,23 @@ sys.path.insert(0, os.path.join(zeronet_directory, "plugins/CryptMessage"))  # E
 sys.path.insert(0, os.path.join(zeronet_directory, "src/lib"))  # External liblary directory
 sys.path.insert(0, os.path.join(zeronet_directory, "src"))  # Imports relative to src
 
-import json
+# Guess private/public keys
+import zeronet
 
-# Guess private key
-zeroid = None
-privatekey = None
-try:
-	with open(zeronet_directory + "data/users.json", "r") as f:
-		users = json.loads(f.read())
-		user = users[users.keys()[0]]
+zeroid, privatekey = zeronet.guess_private_key(zeronet_directory)
+if zeroid is None:
+	print "Could not access users.json"
+	privatekey = raw_input("Private key:")
+elif privatekey is None:
+	privatekey = raw_input("Private key:")
+else:
+	print "Private key:", privatekey
 
-		zeroid = user["certs"]["zeroid.bit"]["auth_address"]
-
-		zeromail = user["sites"]["1MaiL5gfBM1cyb4a8e3iiL8L5gXmoAJu27"]
-		keyname = [key for key in zeromail.keys() if "encrypt_privatekey" in key][0]
-		privatekey = zeromail[keyname]
-except Exception as e:
-	if zeroid is None:
-		print "Could not load ZeroID address"
-		print e
-		sys.exit(1)
-
-	privatekey = raw_input("ZeroMail private key:")
-
-# Guess public key
-publickey = None
-try:
-	with open(zeronet_directory + "data/1MaiL5gfBM1cyb4a8e3iiL8L5gXmoAJu27/data/users/" + zeroid + "/data.json") as f:
-		data = json.loads(f.read())
-		publickey = data["publickey"]
-except:
-	publickey = raw_input("ZeroMail public key:")
-
-print "Access using"
-print "Public key:", publickey
-print "Private key:", privatekey
+publickey = zeronet.guess_public_key(zeronet_directory, zeroid=zeroid)
+if publickey is None:
+	publickey = raw_input("Public key:")
+else:
+	print "Public key:", publickey
 
 from zeromail import ZeroMail
 zeromail = ZeroMail(zeronet_directory, pub=publickey, priv=privatekey)
