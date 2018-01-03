@@ -83,12 +83,11 @@ class Session(object):
 		self.status(235, "Welcome")
 
 	def auth(self, data):
-		print [format(ord(char), "02x") for char in data]
 		zid = data[:data.index("\x00")]
-		login = data[data.index("\x00")+1:data.rindex("\x00")]
+		user = data[data.index("\x00")+1:data.rindex("\x00")]
 		password = data[data.rindex("\x00")+1:]
 
-		self.transaction = Transaction(self.conn)
+		self.transaction = Transaction(user, password, Mailbox=self.Mailbox, conn=self.conn)
 
 	def commandMail(self):
 		self.status(530, "Auth required")

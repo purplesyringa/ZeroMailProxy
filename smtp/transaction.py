@@ -1,6 +1,10 @@
 class Transaction(object):
-	def __init__(self, conn):
+	def __init__(self, user, password, Mailbox, conn):
+		self.user = user
+		self.password = password
+		self.Mailbox = Mailbox
 		self.conn = conn
+
 		self.raw_handler = None
 		self.state = "awaitMail"
 
