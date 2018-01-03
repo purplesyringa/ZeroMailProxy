@@ -16,8 +16,12 @@ class Session(object):
 
 	def ok(self, s):
 		self.status(250, s)
+	def ok_(self, s):
+		self.status_(250, s)
 	def status(self, status, s):
 		self.sendall("%s %s" % (status, s))
+	def status_(self, status, s):
+		self.sendall("%s-%s" % (status, s))
 
 	def init(self):
 		debug("New session")
