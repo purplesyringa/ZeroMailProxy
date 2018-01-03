@@ -1,6 +1,6 @@
 from util import debug, critical, ServerError, CommandError
 from transaction import Transaction
-import time
+import time, base64
 
 class Session(object):
 	def __init__(self, conn, Mailbox):
@@ -59,17 +59,40 @@ class Session(object):
 		self.ok_("SMTP server here")
 		self.ok("AUTH PLAIN")
 
-	def commandAuth(self, type, data):
+	def commandAuth(self, type, data=None):
 		if type.upper() != "PLAIN":
-			self.status(502, "Only AUTH PLAIN supported")
+			self.status(504, "Only AUTH PLAIN supported")
 			return
 
+		if data is None:
+			self.raw_handler = "handleAuth"
+			self.status(334, "Waiting AUTH data")
+		else:
+			self.handleAuth(data)
+	def handleAuth(self, data):
+		if data == "*":
+			self.status(501, "Think before doing next time")
+			return
+
+		try:
+			data = base64.b64decode(data)
+		except:
+			self.status(501, "Invalid Base64")
+
+		self.auth(data)
+		self.status(235, "Welcome")
+
+	def auth(self, data):
+		print [format(ord(char), "02x") for char in data]
+		zid = data[:data.index("\x00")]
+		login = data[data.index("\x00")+1:data.rindex("\x00")]
+		password = data[data.rindex("\x00")+1:]
+
 		self.transaction = Transaction(self.conn)
-		self.ok("Auth ok")
 
 	def commandMail(self):
-		self.status(503, "Auth required")
+		self.status(530, "Auth required")
 	def commandRcpt(self):
-		self.status(503, "Auth required")
+		self.status(530, "Auth required")
 	def commandData(self):
-		self.status(503, "Auth required")
+		self.status(530, "Auth required")
