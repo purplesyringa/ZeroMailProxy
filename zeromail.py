@@ -104,3 +104,15 @@ class ZeroMail(object):
 			f.write(json.dumps(cache))
 
 		return messages
+
+	def remove_message(self, secrets, message):
+		messages = self.update_messages(secrets)
+		messages.pop(str(message))
+
+		date_added = None
+		with open(self.cache_directory + "/messages.json", "r") as f:
+			date_added = json.loads(f.read())["date_added"]
+
+		with open(self.cache_directory + "/messages.json", "w") as f:
+			cache = dict(messages=messages, date_added=date_added)
+			f.write(json.dumps(cache))

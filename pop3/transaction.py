@@ -42,5 +42,13 @@ class Transaction(object):
 		except KeyError:
 			raise CommandError("Unknown message " + str(message))
 
+	def commandDele(self, message):
+		message = int(message)
+		try:
+			self.mailbox.pop(message)
+			return "Okay"
+		except KeyError:
+			raise CommandError("Message doesn't exist")
+
 	def escape(self, s):
 		return "\r\n".join(["." + line if len(line) > 0 and line[0] == "." else line for line in s.split("\r\n")])
