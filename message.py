@@ -1,4 +1,4 @@
-import hashlib, json, datetime
+import hashlib, json, datetime, markdown
 
 class Message(object):
 	def __init__(self, date, data):
@@ -12,6 +12,11 @@ class Message(object):
 		self.from_ = data["cert_user_id"]
 		self.subject = raw["subject"]
 
+		self.body = self.from_markdown(self.body)
+
+	def from_markdown(self, text):
+		return markdown.markdown(text)
+
 	def __len__(self):
 		return len(str(self))
 
@@ -21,6 +26,7 @@ class Message(object):
 			"To: " + self.to + "\r\n" +
 			"Subject: " + self.subject + "\r\n" +
 			"Date: " + self.formatDate(self.date) + "\r\n"
+			"Content-Type: text/html; charset=utf-8\r\n"
 		)
 
 	def __str__(self):
