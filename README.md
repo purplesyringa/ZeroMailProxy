@@ -4,11 +4,20 @@ A fast, lightweight server for [ZeroMail](https://github.com/HelloZeroNet/ZeroMa
 
 ## Installation and usage
 
+Linux:
 ```bash
 $ git clone https://github.com/imachug/ZeroMailProxy
 $ cd ZeroMailProxy
 $ sudo python pop.py # Run local POP3 server
 $ sudo python smtp.py # Run local SMTP server
+```
+
+Windows:
+```
+> git clone https://github.com/imachug/ZeroMailProxy
+> cd ZeroMailProxy
+> python pop.py # Run local POP3 server
+> python smtp.py # Run local SMTP server
 ```
 
 ## Local servers
