@@ -4,16 +4,18 @@ A fast, lightweight server for [ZeroMail](https://github.com/HelloZeroNet/ZeroMa
 
 ## TODO
 
-1. ~~Support HELO and VRFY~~
-2. ~~HTML/Markdownn not handled~~
-3. ~~May be problems with multipart~~
-4. ~~SMTP server~~
-5. ~~Command-line client~~
-6. ~~POP3 server~~
-7. ~~Send message not only to yourself~~
-8. ~~Automatically create secrets~~
-9. ~~Sign changes~~
-10. ~~Publish changes~~
+1. Usable command line client
+2. Start POP3 and SMTP server in one process
+3. ~~HTML/Markdown not handled~~
+4. ~~Support HELO and VRFY~~
+5. ~~SMTP server~~
+6. ~~May be problems with multipart~~
+7. ~~Command-line client~~
+8. ~~Publish changes~~
+9. ~~Automatically create secrets~~
+10. ~~Sign changes~~
+11. ~~Send message not only to yourself~~
+12. ~~POP3 server~~
 
 ## Installation and usage
 
