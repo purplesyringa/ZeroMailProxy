@@ -1,3 +1,5 @@
+import os, sys
+
 zeronet_directory = "/home/ivanq/Documents/ZeroNet/" # <-- Change me depending on OS/Package settings
 
 # Load ZeroNet plugins
