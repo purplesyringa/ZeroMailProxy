@@ -95,14 +95,14 @@ class Mailbox(object):
 	def walk(self, message):
 		content_type = message.get_content_type()
 		if content_type == "multipart/alternative":
-			# Try to find text/plain
-			for part in message.get_payload():
-				if part.get_content_type() == "text/plain":
-					return self.walk(part)
-
 			# Try to find text/html
 			for part in message.get_payload():
 				if part.get_content_type() == "text/html":
+					return self.walk(part)
+
+			# Try to find text/plain
+			for part in message.get_payload():
+				if part.get_content_type() == "text/plain":
 					return self.walk(part)
 
 			return None
@@ -116,10 +116,10 @@ class Mailbox(object):
 
 			return "\n\n".join(content)
 		elif content_type == "text/html":
-			# Only text/html - no text/plain
-			return self.parse_message(message)
+			# Only text/html
+			return self.html_to_markdown(self.parse_message(message))
 		elif content_type == "text/plain":
-			# Yay!
+			# Only text/plain
 			return self.parse_message(message)
 		else:
 			return None
@@ -128,3 +128,7 @@ class Mailbox(object):
 		content = message.get_payload(decode=True)
 		content = content.replace("\r\n", "\n")
 		return content
+
+	def html_to_markdown(self, html):
+		import html2text
+		return html2text.html2text(html)
