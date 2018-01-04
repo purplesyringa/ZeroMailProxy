@@ -82,24 +82,49 @@ class Mailbox(object):
 		subject = message["Subject"]
 		timestamp = time.mktime(datetime.datetime(*email.utils.parsedate(message["Date"])[:6]).timetuple())
 
-		content = None
-		if message.is_multipart():
-			content = []
-
-			for part in message.walk():
-				content_type = part.get_content_type()
-				if content_type == "text/plain" or content_type == "text/html":
-					payload = part.get_payload(decode=True)
-					payload = payload.replace("\r\n", "\n")
-					content.append(payload)
-
-			content = "\n\n".join(content)
-		else:
-			content = message.get_payload(decode=True)
-			content = content.replace("\r\n", "\n")
+		content = self.walk(message)
+		if content is None:
+			content = "<no data>"
 
 		messages = []
 		for i, address in enumerate(to):
 			address = address[:address.rindex("@")]
 			sign = i == len(to) - 1
 			self.zeromail.send(subject=subject, body=content, to=address, date=timestamp * 1000, sign=sign)
+
+	def walk(self, message):
+		content_type = message.get_content_type()
+		if content_type == "multipart/alternative":
+			# Try to find text/plain
+			for part in message.get_payload():
+				if part.get_content_type() == "text/plain":
+					return self.walk(part)
+
+			# Try to find text/html
+			for part in message.get_payload():
+				if part.get_content_type() == "text/html":
+					return self.walk(part)
+
+			return None
+		elif message.is_multipart():
+			res = []
+
+			for part in message.get_payload():
+				part = self.walk(part)
+				if part is not None:
+					res.append(part)
+
+			return "\n\n".join(content)
+		elif content_type == "text/html":
+			# Only text/html - no text/plain
+			return self.parse_message(message)
+		elif content_type == "text/plain":
+			# Yay!
+			return self.parse_message(message)
+		else:
+			return None
+
+	def parse_message(self, message):
+		content = message.get_payload(decode=True)
+		content = content.replace("\r\n", "\n")
+		return content
