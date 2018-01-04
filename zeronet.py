@@ -79,6 +79,4 @@ def publish_socket(address, content, zeronet_directory):
 	# Access WebSocket
 	from zerowebsocket import ZeroWebSocket
 	with ZeroWebSocket(wrapper_key) as ws:
-		print ws.ping()
-
-	raise NotImplementedError("Cannot publish file via ZeroWebSocket yet")
+		ws.sitePublish(inner_path=content, sign=False)
