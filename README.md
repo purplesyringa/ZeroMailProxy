@@ -5,7 +5,7 @@ A fast, lightweight server for [ZeroMail](https://github.com/HelloZeroNet/ZeroMa
 ## TODO
 
 1. Usable command line client
-2. Start POP3 and SMTP server in one process
+2. ~~Start POP3 and SMTP server in one process~~
 3. ~~HTML/Markdown not handled~~
 4. ~~Support HELO and VRFY~~
 5. ~~SMTP server~~
