@@ -39,7 +39,7 @@ def sign(address, content, zeronet_directory):
 	Config.config.data_dir = zeronet_directory.replace("\\", "/") + "data"
 	Config.config.db_mode = "speed"
 	Config.config.language = "en"
-	Config.config.fileserver_port = "3124"
+	Config.config.fileserver_port = "15441"
 	Config.config.homepage = "1HeLLo4uzjaLetFx6NH3PMwFP3qbRbTf3D"
 	Config.config.disable_db = False
 	Config.config.verbose = False
@@ -63,3 +63,23 @@ def sign(address, content, zeronet_directory):
 		update_changed_files=True,
 		remove_missing_optional=False
 	)
+
+def publish(address, content, zeronet_directory):
+	# Check for lock
+	from util import helper
+
+	data_dir = zeronet_directory.replace("\\", "/") + "data"
+	try:
+		with helper.openLocked("%s/lock.pid" % data_dir, "w") as f:
+			pass
+
+		# Could get lock; let's run normal sitePublish then
+		from src import main as zeronet_lib
+		zeronet_lib.sitePublish(address, inner_path=content)
+	except IOError:
+		# Could not get lock
+		publish_socket(address, content)
+
+def publish_socket(address, content);
+	# Publish file via ZeroWebSocket
+	raise NotImplementedError("Cannot publish file via ZeroWebSocket yet")
