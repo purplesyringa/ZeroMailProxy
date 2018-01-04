@@ -5,7 +5,7 @@ A fast, lightweight server for [ZeroMail](https://github.com/HelloZeroNet/ZeroMa
 ## TODO
 
 1. SMTP server
-2. Command-line client
+2. ~~Command-line client~~
 3. ~~POP3 server~~
 4. ~~Send message not only to yourself~~
 5. ~~Automatically create secrets~~
