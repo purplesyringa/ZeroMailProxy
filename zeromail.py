@@ -1,4 +1,5 @@
 import sqlite3, cryptlib, os, json, base64, errno, time
+from base64_number import base64_from_number
 
 current_directory = os.path.dirname(os.path.realpath(__file__))
 
@@ -132,11 +133,53 @@ class ZeroMail(object):
 		secrets_sent = cryptlib.eciesDecrypt(secrets_sent, self.privkey)
 		secrets_sent = json.loads(secrets_sent)
 		return secrets_sent
+	def write_secrets_sent(self, secrets_sent):
+		data = None
+		with open(self.zeromail_data, "r") as f:
+			data = json.loads(f.read())
+
+		secrets_sent = json.dumps(secrets_sent)
+		secrets_sent, aes = cryptlib.eciesEncrypt(secrets_sent, self.pubkey)
+		data["secrets_sent"] = secrets_sent
+
+		with open(self.zeromail_data, "w") as f:
+			f.write(json.dumps(data, indent=4))
 	def get_secret(self, address):
 		secrets_sent = self.load_secrets_sent()
 		if address in secrets_sent:
 			return secrets_sent[address].split(":", 1)[1]
 		return self.add_secret(address)
+	def add_secret(self, address):
+		# Get public key
+		publickey = None
+		try:
+			with open(self.zeronet_directory + "data/1MaiL5gfBM1cyb4a8e3iiL8L5gXmoAJu27/data/users/" + address + "/data.json", "r") as f:
+				publickey = json.loads(f.read())["publickey"]
+		except IOError:
+			raise TypeError("No public key for " + address)
+
+		# Generate new random AES key
+		key, iv, encrypted = cryptlib.aesEncrypt("")
+
+		# Encrypt the new key for remote user
+		secret, aes = cryptlib.eciesEncrypt(key, publickey)
+
+		# Save secret
+		data = None
+		with open(self.zeromail_data, "r") as f:
+			data = json.loads(f.read())
+
+		date = int(time.time() * 1000)
+		data["secret"][date] = secret
+
+		with open(self.zeromail_data, "w") as f:
+			f.write(json.dumps(data, indent=4))
+
+		secrets_sent = self.load_secrets_sent()
+		secrets_sent[address] = base64_from_number(date) + ":" + key
+		self.write_secrets_sent(secrets_sent)
+
+		return key
 
 	def send(self, subject, body, to):
 		address = self.zeroid_to_address(to)
@@ -154,7 +197,7 @@ class ZeroMail(object):
 		data["date_added"] = int(time.time() * 1000)
 
 		with open(self.zeromail_data, "w") as f:
-			f.write(json.dumps(data))
+			f.write(json.dumps(data, indent=4))
 
 		self.sign("1MaiL5gfBM1cyb4a8e3iiL8L5gXmoAJu27", "data/users/" + self.zeroid + "/content.json")
 
