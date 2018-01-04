@@ -101,3 +101,5 @@ class Session(object):
 		self.ok("OK")
 	def commandNoop(self):
 		self.ok("OK")
+	def commandVrfy(self):
+		self.status(502, "Command not implemented")

@@ -84,6 +84,9 @@ class Transaction(object):
 	def commandNoop(self):
 		self.ok("OK")
 
+	def commandVrfy(self, address):
+		self.status(502, "Command not implemented")
+
 	def parseColon(self, args):
 		res = dict()
 		for arg in args:
