@@ -55,7 +55,26 @@ POP3 server is finished. To make it work, configure your mail clinet to use `loc
 
 ## Example for ThunderBird
 
-*Coming soon*
+1. Run POP3 server
+2. Run SMTP server
+3. Open ThunderBird  
+![ThunderBird](images/thunderbird/1.png)  
+4. Open *Menu* -> *Options* -> *Account Settings*  
+![ThunderBird](images/thunderbird/2.png)  
+5. Press *Account Actions* -> *Add Mail Account...*  
+![ThunderBird](images/thunderbird/3.png)  
+6. Set *Your name* to anything you want, *Email address* to `<yourzeroid>@zeroid.bit`, *Password* to `local` and press `Continue`  
+![ThunderBird](images/thunderbird/4.png)  
+7. ThunderBird will try to configure everything manually - stop that by pressing *Manual config*
+8. Set:
+    - *Incoming* to `POP3 | localhost | 110 | None | Normal password`
+    - *Outgoing* to `SMTP | localhost | 587 | None | Normal password`
+    - *Username* to `local | local`  
+![ThunderBird](images/thunderbird/5.png)  
+9. Press *Re-test* and then *Done*
+10. Accept warning  
+![ThunderBird](images/thunderbird/6.png)  
+11. Close menu and press *Get messages*
 
 ## Command-line client
 
