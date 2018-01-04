@@ -181,7 +181,7 @@ class ZeroMail(object):
 
 		return key
 
-	def send(self, subject, body, to):
+	def send(self, subject, body, to, date):
 		address = self.zeroid_to_address(to)
 
 		secret = self.get_secret(address)
@@ -192,7 +192,6 @@ class ZeroMail(object):
 		with open(self.zeromail_data, "r") as f:
 			data = json.loads(f.read())
 
-		date = int(time.time() * 1000)
 		data["message"][str(date)] = iv + "," + encrypted
 		data["date_added"] = int(time.time() * 1000)
 

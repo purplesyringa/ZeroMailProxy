@@ -1,4 +1,4 @@
-import os, sys, datetime, json
+import os, sys, datetime, json, time
 
 from config import zeronet_directory
 
@@ -35,4 +35,4 @@ while True:
 
 to = raw_input("Recipient (e.g. gitcenter):")
 
-zeromail.send(subject=subject, body=body, to=to)
+zeromail.send(subject=subject, body=body, to=to, date=time.time() * 1000)
