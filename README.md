@@ -78,4 +78,25 @@ POP3 server is finished. To make it work, configure your mail clinet to use `loc
 
 ## Command-line client
 
-*Coming soon*
+1. Run `python send.py`
+2. Type subject and body
+3. Set recipient (make sure you ZeroMail'ed them before)
+4. Wait for signing
+5. Publish message for yourself by opening sidebar, toggling *This is my site*, changing `content.json` to `data/users/<youraddress>/content.json` and pressing *Publish* (will fix soon)
+
+### Example session
+
+```bash
+$ python send.py
+ZeroID: 1Cy3ntkN2GN9MH6EaW6eHpi4YoRS2nK5Di
+Private key: 5KVc********************************************AjX
+This command-line client will send a message
+THIS WILL ONLY WORK IF YOU SENT A MESSAGE TO RECIPIENT VIA ZEROMAIL BEFORE
+
+Subject:Test
+Body: (empty line finishes)
+Testing!
+
+Recipient (e.g. gitcenter):gitcenter
+$
+```
