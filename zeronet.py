@@ -32,19 +32,6 @@ def guess_public_key(zeronet_directory, zeroid):
 		return None
 
 def sign(address, content, zeronet_directory):
-	import Config
-	Config.config.debug = False
-	Config.config.debug_gevent = False
-	Config.config.use_tempfiles = False
-	Config.config.data_dir = zeronet_directory.replace("\\", "/") + "data"
-	Config.config.db_mode = "speed"
-	Config.config.language = "en"
-	Config.config.fileserver_port = "15441"
-	Config.config.homepage = "1HeLLo4uzjaLetFx6NH3PMwFP3qbRbTf3D"
-	Config.config.disable_db = False
-	Config.config.verbose = False
-	Config.config.size_limit = 10
-
 	from Site import Site
 	site = Site(address, allow_create=False)
 
@@ -65,15 +52,6 @@ def sign(address, content, zeronet_directory):
 	)
 
 def publish(address, content, zeronet_directory):
-	import Config
-	Config.config.fileserver_ip = "127.0.0.1"
-	Config.config.bit_resolver = "1Name2NXVi1RDPDgf5617UoW7xA6YrhM9F"
-	Config.config.tor = "disabled"
-	Config.config.ip_local = "127.0.0.1"
-	Config.config.ip_external = None
-	Config.config.disable_encryption = False
-	Config.config.trackers_file = False
-
 	# Check for lock
 	from util import helper
 
