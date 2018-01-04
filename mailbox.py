@@ -67,3 +67,10 @@ class Mailbox(object):
 	def pop(self, message):
 		secrets = self.zeromail.update_secrets()
 		self.zeromail.remove_message(secrets, self.expandMessageId(message))
+
+	def acceptsRecipient(self, address):
+		try:
+			self.zeromail.zeroid_to_address(address[:address.rindex("@")])
+			return True
+		except TypeError:
+			return False

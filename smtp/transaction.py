@@ -43,10 +43,12 @@ class Transaction(object):
 		assert self.state == "awaitRcpt"
 
 		args = self.parseColon(args)
-		self.to.append(args["TO"][1:-1])
-
-		self.state = "awaitRcpt"
-		self.ok(args["TO"][1:-1] + " ok")
+		to = args["TO"][1:-1]
+		if self.mailbox.acceptsRecipient(to):
+			self.to.append(to)
+			self.ok(to + " ok")
+		else:
+			self.status(450, to + " was not accepted by Mailbox")
 
 	def commandData(self, *args):
 		assert self.state == "awaitRcpt"
