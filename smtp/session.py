@@ -58,6 +58,8 @@ class Session(object):
 	def commandEhlo(self, server):
 		self.ok_("SMTP server here")
 		self.ok("AUTH PLAIN")
+	def commandHelo(self, server):
+		self.ok("SMTP server here")
 
 	def commandAuth(self, type, data=None):
 		if type.upper() != "PLAIN":

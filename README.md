@@ -4,7 +4,7 @@ A fast, lightweight server for [ZeroMail](https://github.com/HelloZeroNet/ZeroMa
 
 ## TODO
 
-1. Support HELO and VRFY
+1. Support ~~HELO~~ and VRFY
 2. ~~HTML/Markdownn not handled~~
 3. ~~May be problems with multipart~~
 4. ~~SMTP server~~
