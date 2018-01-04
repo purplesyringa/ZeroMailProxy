@@ -3,6 +3,7 @@ from message import Message
 from config import zeronet_directory
 import zeronet
 from pop3.util import CommandError
+import email, time, datetime, json
 
 class Mailbox(object):
 	def __init__(self, user, password):
@@ -74,3 +75,31 @@ class Mailbox(object):
 			return True
 		except TypeError:
 			return False
+
+	def send(self, from_, to, data):
+		message = email.message_from_string(data)
+
+		subject = message["Subject"]
+		timestamp = time.mktime(datetime.datetime(*email.utils.parsedate(message["Date"])[:6]).timetuple())
+
+		content = None
+		if message.is_multipart():
+			content = []
+
+			for part in message.walk():
+				content_type = part.get_content_type()
+				if content_type == "text/plain" or content_type == "text/html":
+					payload = part.get_payload(decode=True)
+					payload = payload.replace("\r\n", "\n")
+					content.append(payload)
+
+			content = "\n\n".join(content)
+		else:
+			content = message.get_payload(decode=True)
+			content = content.replace("\r\n", "\n")
+
+		messages = []
+		for i, address in enumerate(to):
+			address = address[:address.rindex("@")]
+			sign = i == len(to) - 1
+			self.zeromail.send(subject=subject, body=content, to=address, date=timestamp * 1000, sign=sign)
