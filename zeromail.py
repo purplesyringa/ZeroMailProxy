@@ -203,6 +203,7 @@ class ZeroMail(object):
 
 	def sign(self, address, content):
 		zeronet.sign(address, content, zeronet_directory=self.zeronet_directory)
+		zeronet.publish(address, content, zeronet_directory=self.zeronet_directory)
 
 	def zeroid_to_address(self, zeroid):
 		jsons = self.cursor.execute("""

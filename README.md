@@ -6,11 +6,11 @@ A fast, lightweight server for [ZeroMail](https://github.com/HelloZeroNet/ZeroMa
 
 1. SMTP server
 2. Command-line client
-3. Publish changes
-4. ~~POP3 server~~
-5. ~~Send message not only to yourself~~
-6. ~~Automatically create secrets~~
-7. ~~Sign changes~~
+3. ~~POP3 server~~
+4. ~~Send message not only to yourself~~
+5. ~~Automatically create secrets~~
+6. ~~Sign changes~~
+7. ~~Publish changes~~
 
 ## Installation and usage
 
@@ -91,8 +91,7 @@ POP3 server is finished. To make it work, configure your mail clinet to use `loc
 1. Run `python send.py`
 2. Type subject and body
 3. Set recipient (make sure you ZeroMail'ed them before)
-4. Wait for signing
-5. Publish message for yourself by opening sidebar, toggling *This is my site*, changing `content.json` to `data/users/<youraddress>/content.json` and pressing *Publish* (will fix soon)
+4. Wait for signing and publishing
 
 ### Example session
 
