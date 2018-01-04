@@ -26,8 +26,8 @@ else:
 from zeromail import ZeroMail
 zeromail = ZeroMail(zeronet_directory, zeroid=zeroid, priv=privatekey)
 
-print "This command-line client will send a ping message to yourself"
-print "THIS WILL ONLY WORK IF YOU SEND A MESSAGE TO YOURSELF VIA ZEROMAIL BEFORE"
+print "This command-line client will send a message"
+print "THIS WILL ONLY WORK IF YOU SENT A MESSAGE TO RECIPIENT VIA ZEROMAIL BEFORE"
 print ""
 
 subject = raw_input("Subject:")
@@ -40,6 +40,6 @@ while True:
 		break
 	body += line + "\r\n"
 
-to = raw_input("Your nickname (e.g. gitcenter):")
+to = raw_input("Recipient (e.g. gitcenter):")
 
-zeromail.send(zeroid, subject=subject, body=body, to=to)
+zeromail.send(subject=subject, body=body, to=to)

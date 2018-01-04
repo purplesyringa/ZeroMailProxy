@@ -20,6 +20,7 @@ class ZeroMail(object):
 		self.conn = sqlite3.connect(zeronet_directory + 'data/1MaiL5gfBM1cyb4a8e3iiL8L5gXmoAJu27/data/users/zeromail.db')
 		self.cursor = self.conn.cursor()
 
+	# Load secrets
 	def get_secrets(self, from_date_added=0):
 		secrets = []
 		for row in self.cursor.execute('SELECT encrypted, json_id, date_added FROM secret WHERE date_added > ? ORDER BY date_added DESC', (from_date_added,)):
@@ -48,6 +49,7 @@ class ZeroMail(object):
 
 		return secrets
 
+	# Load messages
 	def get_messages(self, secrets, from_date_added=0):
 		date_added = from_date_added
 
@@ -106,6 +108,7 @@ class ZeroMail(object):
 
 		return messages
 
+	# Delete messages
 	def remove_message(self, secrets, message):
 		messages = self.update_messages(secrets)
 		messages.pop(str(message))
@@ -118,6 +121,7 @@ class ZeroMail(object):
 			cache = dict(messages=messages, date_added=date_added)
 			f.write(json.dumps(cache))
 
+	# Send
 	def load_secrets_sent(self):
 		data = None
 		with open(self.zeromail_data, "r") as f:
@@ -133,7 +137,9 @@ class ZeroMail(object):
 			return secrets_sent[address].split(":", 1)[1]
 		return self.add_secret(address)
 
-	def send(self, address, subject, body, to):
+	def send(self, subject, body, to):
+		address = self.zeroid_to_address(to)
+
 		secret = self.get_secret(address)
 		message = json.dumps(dict(subject=subject, body=body, to=to + "@zeroid.bit"))
 		aes, iv, encrypted = cryptlib.aesEncrypt(message, secret)
@@ -183,3 +189,26 @@ class ZeroMail(object):
 			update_changed_files=True,
 			remove_missing_optional=False
 		)
+
+	def zeroid_to_address(self, zeroid):
+		jsons = self.cursor.execute("""
+			SELECT
+				json.directory,
+				keyvalue.value AS cert_user_id
+			FROM json
+
+			LEFT JOIN keyvalue
+			ON (keyvalue.json_id = json.json_id)
+
+			WHERE
+				json.file_name = "content.json" AND
+				keyvalue.value = ?
+		""", (zeroid + "@zeroid.bit",))
+		jsons = [json for json in jsons]
+
+		if len(jsons) == 0:
+			raise TypeError("Unable to find mailbox for " + zeroid + "@zeroid.bit")
+		elif len(jsons) > 1:
+			raise TypeError("Several mailboxes for " + zeroid + "@zeroid.bit")
+
+		return jsons[0][0]
