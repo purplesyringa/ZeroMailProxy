@@ -4,13 +4,15 @@ A fast, lightweight server for [ZeroMail](https://github.com/HelloZeroNet/ZeroMa
 
 ## TODO
 
-1. SMTP server
-2. ~~Command-line client~~
-3. ~~POP3 server~~
-4. ~~Send message not only to yourself~~
-5. ~~Automatically create secrets~~
-6. ~~Sign changes~~
-7. ~~Publish changes~~
+1. HTML/Markdownn not handled
+2. May be problems with multipart
+3. ~~SMTP server~~
+4. ~~Command-line client~~
+5. ~~POP3 server~~
+6. ~~Send message not only to yourself~~
+7. ~~Automatically create secrets~~
+8. ~~Sign changes~~
+9. ~~Publish changes~~
 
 ## Installation and usage
 
