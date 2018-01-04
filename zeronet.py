@@ -80,6 +80,6 @@ def publish(address, content, zeronet_directory):
 		# Could not get lock
 		publish_socket(address, content)
 
-def publish_socket(address, content);
+def publish_socket(address, content):
 	# Publish file via ZeroWebSocket
 	raise NotImplementedError("Cannot publish file via ZeroWebSocket yet")
