@@ -4,9 +4,10 @@ current_directory = os.path.dirname(os.path.realpath(__file__))
 
 
 class ZeroMail(object):
-	def __init__(self, zeronet_directory, zeroid, priv):
+	def __init__(self, zeronet_directory, zeroid, pub, priv):
 		self.zeronet_directory = zeronet_directory
 		self.zeroid = zeroid
+		self.pubkey = pub
 		self.privkey = priv
 
 		self.zeromail_data = zeronet_directory + "data/1MaiL5gfBM1cyb4a8e3iiL8L5gXmoAJu27/data/users/" + zeroid + "/data.json"

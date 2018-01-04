@@ -11,20 +11,23 @@ sys.path.insert(0, os.path.join(zeronet_directory, "src"))  # Imports relative t
 # Guess private/public keys
 import zeronet
 
-zeroid, privatekey = zeronet.guess_private_key(zeronet_directory)
+zeroid, publickey, privatekey = zeronet.guess_private_key(zeronet_directory)
 if zeroid is None:
 	print "Could not access users.json"
 	zeroid = raw_input("ZeroID:")
+	publickey = raw_input("Public key:")
 	privatekey = raw_input("Private key:")
-elif privatekey is None:
+elif publickey is None or privatekey is None:
 	print "ZeroID:", zeroid
+	publickey = raw_input("Public key:")
 	privatekey = raw_input("Private key:")
 else:
 	print "ZeroID:", zeroid
+	print "Public key:", publickey
 	print "Private key:", privatekey
 
 from zeromail import ZeroMail
-zeromail = ZeroMail(zeronet_directory, zeroid=zeroid, priv=privatekey)
+zeromail = ZeroMail(zeronet_directory, zeroid=zeroid, pub=publickey, priv=privatekey)
 
 print "This command-line client will send a message"
 print "THIS WILL ONLY WORK IF YOU SENT A MESSAGE TO RECIPIENT VIA ZEROMAIL BEFORE"

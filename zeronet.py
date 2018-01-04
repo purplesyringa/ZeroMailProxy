@@ -10,14 +10,18 @@ def guess_private_key(zeronet_directory):
 
 			try:
 				zeromail = user["sites"]["1MaiL5gfBM1cyb4a8e3iiL8L5gXmoAJu27"]
+
+				keyname = [key for key in zeromail.keys() if "encrypt_publickey" in key][0]
+				publickey = zeromail[keyname]
+
 				keyname = [key for key in zeromail.keys() if "encrypt_privatekey" in key][0]
 				privatekey = zeromail[keyname]
 
-				return (zeroid, privatekey)
+				return (zeroid, publickey, privatekey)
 			except (KeyError, TypeError):
-				return (zeroid, None)
+				return (zeroid, None, None)
 	except (IOError, KeyError, TypeError):
-		return (None, None)
+		return (None, None, None)
 
 def guess_public_key(zeronet_directory, zeroid):
 	try:
