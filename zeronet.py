@@ -30,3 +30,36 @@ def guess_public_key(zeronet_directory, zeroid):
 			return data["publickey"]
 	except (IOError, KeyError, TypeError):
 		return None
+
+def sign(address, content, zeronet_directory):
+	import Config
+	Config.config.debug = False
+	Config.config.debug_gevent = False
+	Config.config.use_tempfiles = False
+	Config.config.data_dir = zeronet_directory.replace("\\", "/") + "data"
+	Config.config.db_mode = "speed"
+	Config.config.language = "en"
+	Config.config.fileserver_port = "3124"
+	Config.config.homepage = "1HeLLo4uzjaLetFx6NH3PMwFP3qbRbTf3D"
+	Config.config.disable_db = False
+	Config.config.verbose = False
+	Config.config.size_limit = 10
+
+	from Site import Site
+	site = Site(address, allow_create=False)
+
+	from User import UserManager
+	user = UserManager.user_manager.get()
+	if user:
+		privatekey = user.getAuthPrivatekey("1iD5ZQJMNXu43w1qLB8sfdHVKppVMduGz", create=False)
+		if privatekey is None:
+			raise TypeError("Could not find ZeroID private key")
+	else:
+		raise TypeError("Could not find ZeroID private key")
+
+	site.content_manager.sign(
+		inner_path=content,
+		privatekey=privatekey,
+		update_changed_files=True,
+		remove_missing_optional=False
+	)

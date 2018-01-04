@@ -1,4 +1,4 @@
-import sqlite3, cryptlib, os, json, base64, errno, time
+import sqlite3, cryptlib, os, json, base64, errno, time, zeronet
 from base64_number import base64_from_number
 
 current_directory = os.path.dirname(os.path.realpath(__file__))
@@ -202,37 +202,7 @@ class ZeroMail(object):
 		self.sign("1MaiL5gfBM1cyb4a8e3iiL8L5gXmoAJu27", "data/users/" + self.zeroid + "/content.json")
 
 	def sign(self, address, content):
-		import Config
-		Config.config.debug = False
-		Config.config.debug_gevent = False
-		Config.config.use_tempfiles = False
-		Config.config.data_dir = self.zeronet_directory.replace("\\", "/") + "data"
-		Config.config.db_mode = "speed"
-		Config.config.language = "en"
-		Config.config.fileserver_port = "3124"
-		Config.config.homepage = "1MaiL5gfBM1cyb4a8e3iiL8L5gXmoAJu27"
-		Config.config.disable_db = False
-		Config.config.verbose = False
-		Config.config.size_limit = 10
-
-		from Site import Site
-		site = Site(address, allow_create=False)
-
-		from User import UserManager
-		user = UserManager.user_manager.get()
-		if user:
-			privatekey = user.getAuthPrivatekey("1iD5ZQJMNXu43w1qLB8sfdHVKppVMduGz", create=False)
-			if privatekey is None:
-				raise TypeError("Could not find ZeroID private key")
-		else:
-			raise TypeError("Could not find ZeroID private key")
-
-		site.content_manager.sign(
-			inner_path=content,
-			privatekey=privatekey,
-			update_changed_files=True,
-			remove_missing_optional=False
-		)
+		zeronet.sign(address, content, zeronet_directory=self.zeronet_directory)
 
 	def zeroid_to_address(self, zeroid):
 		jsons = self.cursor.execute("""
