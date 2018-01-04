@@ -65,6 +65,15 @@ def sign(address, content, zeronet_directory):
 	)
 
 def publish(address, content, zeronet_directory):
+	import Config
+	Config.config.fileserver_ip = "127.0.0.1"
+	Config.config.bit_resolver = "1Name2NXVi1RDPDgf5617UoW7xA6YrhM9F"
+	Config.config.tor = "disabled"
+	Config.config.ip_local = "127.0.0.1"
+	Config.config.ip_external = None
+	Config.config.disable_encryption = False
+	Config.config.trackers_file = False
+
 	# Check for lock
 	from util import helper
 
