@@ -181,7 +181,7 @@ class ZeroMail(object):
 
 		return key
 
-	def send(self, subject, body, to, date):
+	def send(self, subject, body, to, date, sign=True):
 		address = self.zeroid_to_address(to)
 
 		secret = self.get_secret(address)
@@ -198,7 +198,8 @@ class ZeroMail(object):
 		with open(self.zeromail_data, "w") as f:
 			f.write(json.dumps(data, indent=4))
 
-		self.sign("1MaiL5gfBM1cyb4a8e3iiL8L5gXmoAJu27", "data/users/" + self.zeroid + "/content.json")
+		if sign:
+			self.sign("1MaiL5gfBM1cyb4a8e3iiL8L5gXmoAJu27", "data/users/" + self.zeroid + "/content.json")
 
 	def sign(self, address, content):
 		zeronet.sign(address, content, zeronet_directory=self.zeronet_directory)
