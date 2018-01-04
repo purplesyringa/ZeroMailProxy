@@ -4,8 +4,8 @@ A fast, lightweight server for [ZeroMail](https://github.com/HelloZeroNet/ZeroMa
 
 ## TODO
 
-1. HTML/Markdownn not handled
-2. May be problems with multipart
+1. ~~HTML/Markdownn not handled~~
+2. ~~May be problems with multipart~~
 3. ~~SMTP server~~
 4. ~~Command-line client~~
 5. ~~POP3 server~~
@@ -94,6 +94,8 @@ POP3 server is finished. To make it work, configure your mail clinet to use `loc
 2. Type subject and body
 3. Set recipient (make sure you ZeroMail'ed them before)
 4. Wait for signing and publishing
+
+Or run `python main.py` to read mail.
 
 ### Example session
 
