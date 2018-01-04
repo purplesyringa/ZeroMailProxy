@@ -130,5 +130,17 @@ class Mailbox(object):
 		return content
 
 	def html_to_markdown(self, html):
+		# Generate random constant
+		import random
+		constant = "CONSTANTBEGINS" + str(random.randint(0, 100000)) + "HOPETHISISUNIQUE"
+
+		# HTML to markdown
 		import html2text
-		return html2text.html2text(html)
+		markdown = html2text.html2text(html)
+
+		# Delete single \n
+		markdown = markdown.replace("\n\n", constant)
+		markdown = markdown.replace("\n", " ")
+		markdown = markdown.replace(constant, "\n\n")
+
+		return markdown
