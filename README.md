@@ -2,6 +2,16 @@
 
 A fast, lightweight server for [ZeroMail](https://github.com/HelloZeroNet/ZeroMail), written in Python.
 
+## TODO
+
+1. SMTP server
+2. Command-line client
+3. Publish changes
+4. ~~POP3 server~~
+5. ~~Send message not only to yourself~~
+6. ~~Automatically create secrets~~
+7. ~~Sign changes~~
+
 ## Installation and usage
 
 Linux:
@@ -90,9 +100,6 @@ POP3 server is finished. To make it work, configure your mail clinet to use `loc
 $ python send.py
 ZeroID: 1Cy3ntkN2GN9MH6EaW6eHpi4YoRS2nK5Di
 Private key: 5KVc********************************************AjX
-This command-line client will send a message
-THIS WILL ONLY WORK IF YOU SENT A MESSAGE TO RECIPIENT VIA ZEROMAIL BEFORE
-
 Subject:Test
 Body: (empty line finishes)
 Testing!
