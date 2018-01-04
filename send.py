@@ -29,10 +29,6 @@ else:
 from zeromail import ZeroMail
 zeromail = ZeroMail(zeronet_directory, zeroid=zeroid, pub=publickey, priv=privatekey)
 
-print "This command-line client will send a message"
-print "THIS WILL ONLY WORK IF YOU SENT A MESSAGE TO RECIPIENT VIA ZEROMAIL BEFORE"
-print ""
-
 subject = raw_input("Subject:")
 
 print "Body: (empty line finishes)"
