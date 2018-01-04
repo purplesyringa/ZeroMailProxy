@@ -65,8 +65,18 @@ def publish(address, content, zeronet_directory):
 		zeronet_lib.actions.sitePublish(address, inner_path=content)
 	except IOError:
 		# Could not get lock
-		publish_socket(address, content)
+		publish_socket(address, content, zeronet_directory=zeronet_directory)
 
-def publish_socket(address, content):
+def publish_socket(address, content, zeronet_directory):
 	# Publish file via ZeroWebSocket
-	raise NotImplementedError("Cannot publish file via ZeroWebSocket yet")
+
+	# Find wrapper_key in sites.json
+	wrapper_key = None
+	with open(zeronet_directory + "data/sites.json", "r") as f:
+		sites = json.loads(f.read())
+		wrapper_key = sites[address]["wrapper_key"]
+
+	# Access WebSocket
+	from zerowebsocket import ZeroWebSocket
+	with ZeroWebSocket(wrapper_key) as ws:
+		ws.sitePublish(inner_path=content, sign=False)
