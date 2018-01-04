@@ -75,7 +75,7 @@ def publish(address, content, zeronet_directory):
 
 		# Could get lock; let's run normal sitePublish then
 		from src import main as zeronet_lib
-		zeronet_lib.sitePublish(address, inner_path=content)
+		zeronet_lib.actions.sitePublish(address, inner_path=content)
 	except IOError:
 		# Could not get lock
 		publish_socket(address, content)
