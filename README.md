@@ -19,7 +19,7 @@ POP3 server is finished. To make it work, configure your mail clinet to use `loc
 
 1. Run POP3 server
 2. Run Windows Mail
-3. Press *New mail*
+3. Press *Accounts* and then *+ Add account*
 4. Scroll to very bottom and choose *Advanced setup*
 5. Choose *Internet email*
 6. Set:
