@@ -3,7 +3,7 @@ from message import Message
 from config import zeronet_directory
 import zeronet
 from pop3.util import CommandError
-import email, time, datetime, json
+import email, time, datetime, json, re
 
 class Mailbox(object):
 	def __init__(self, user, password):
@@ -130,6 +130,9 @@ class Mailbox(object):
 		return content
 
 	def html_to_markdown(self, html):
+		# Remove spaces
+		html = re.sub(r" {2,}", " ", html)
+
 		# Generate random constant
 		import random
 		constant = "CONSTANTBEGINS" + str(random.randint(0, 100000)) + "HOPETHISISUNIQUE"
