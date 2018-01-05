@@ -1,4 +1,4 @@
-import hashlib, json, datetime, markdown
+import hashlib, json, datetime, markdown, array
 
 class Message(object):
 	def __init__(self, date, data):
@@ -12,25 +12,37 @@ class Message(object):
 		self.from_ = data["cert_user_id"]
 		self.subject = raw["subject"]
 
-		self.body = self.from_markdown(self.body)
+		bts = [ord(char) for char in self.body]
+		bts = array.array("B", bts).tostring().decode("utf8")
+		self.body = self.from_markdown(bts)
 
 	def from_markdown(self, text):
 		return markdown.markdown(text)
 
 	def __len__(self):
-		return len(str(self))
+		return len(unicode(self))
 
 	def headers(self):
 		return (
-			"From: " + self.from_ + "\r\n" +
-			"To: " + self.to + "\r\n" +
-			"Subject: " + self.subject + "\r\n" +
-			"Date: " + self.formatDate(self.date) + "\r\n"
-			"Content-Type: text/html; charset=utf-8\r\n"
+			u"From: " + self.from_ + u"\r\n" +
+			u"To: " + self.to + u"\r\n" +
+			u"Subject: " + self.subject + u"\r\n" +
+			u"Date: " + self.formatDate(self.date) + u"\r\n"
+			u"Content-Type: text/html; charset=utf-8\r\n"
 		)
 
 	def __str__(self):
-		return self.headers() + "\r\n" + self.body
+		return unicode(self).encode("utf-8")
+	def __unicode__(self):
+		try:
+			self.headers() + u"\r\n" + self.body
+		except UnicodeEncodeError as e:
+			print self.body
+
+		try:
+			return self.headers() + u"\r\n" + self.body
+		except UnicodeEncodeError as e:
+			pass
 
 	def top(self, lines):
 		top = "\r\n".join(self.body.split("\r\n")[:lines])
@@ -46,5 +58,6 @@ class Message(object):
 
 	def uidl(self):
 		md5 = hashlib.md5()
-		md5.update(str(self.date) + "|" + self.raw)
-		return md5.hexdigest() + "|v2"
+		md5.update(str(self.date) + "|")
+		md5.update(self.raw.encode("utf-8"))
+		return md5.hexdigest() + "|v3"
