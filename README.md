@@ -23,21 +23,19 @@ Linux:
 ```bash
 $ git clone https://github.com/imachug/ZeroMailProxy
 $ cd ZeroMailProxy
-$ sudo python pop.py # Run local POP3 server
-$ sudo python smtp.py # Run local SMTP server
+$ sudo python start_server.py # Run local POP3 and SMTP servers
 ```
 
 Windows:
 ```
 > git clone https://github.com/imachug/ZeroMailProxy
 > cd ZeroMailProxy
-> python pop.py # Run local POP3 server
-> python smtp.py # Run local SMTP server
+> python start_server.py # Run local POP3 and SMTP servers
 ```
 
 ## Local servers
 
-POP3 server is finished. To make it work, configure your mail clinet to use `localhost:110` with login `local` and password `local`.
+POP3 and SMTP servers are ready out-of-box. To use them, configure your mail client to use `localhost:110` with login `local` and password `local` for POP3 and `localhost:587` with the same login/password for SMTP.
 
 ## Example for Windows Mail client
 
