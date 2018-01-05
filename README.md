@@ -23,6 +23,7 @@ Linux:
 ```bash
 $ git clone https://github.com/imachug/ZeroMailProxy
 $ cd ZeroMailProxy
+$ vi config.py
 $ sudo python start_server.py # Run local POP3 and SMTP servers
 ```
 
@@ -30,6 +31,7 @@ Windows:
 ```
 > git clone https://github.com/imachug/ZeroMailProxy
 > cd ZeroMailProxy
+> notepad config.py
 > python start_server.py # Run local POP3 and SMTP servers
 ```
 
