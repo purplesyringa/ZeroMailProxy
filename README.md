@@ -113,3 +113,13 @@ Testing!
 Recipient (e.g. gitcenter):gitcenter
 $
 ```
+
+## Using public/private key not from `users.json`
+
+If you don't want to let ZeroMailProxy read your `users.json`, you can pass `<zeroid>:<publickey>` as login and `<privatekey>` as password.
+
+You can get your `<zeroid>` by visiting `zeroid.bit`, opening sidebar and searching for `UNIQUE ADDRESS`.
+
+You can get your `<publickey>` by visiting `ZeroNet/data/1MaiL5gfBM1cyb4a8e3iiL8L5gXmoAJu27/data/users/<zeroid>/data.json` and searching for `"publickey": "<publickey>"`.
+
+You can get your `<privatekey>` by visiting `ZeroNet/data/users.json`, searching for `"1MaiL5gfBM1cyb4a8e3iiL8L5gXmoAJu27": {` and `"encrypt_privatekey_...": "<privatekey>"`.
