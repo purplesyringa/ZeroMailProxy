@@ -20,8 +20,11 @@ class Mailbox(object):
 			elif self.pub is None:
 				raise CommandError("Could not find user passwords")
 		elif password == "local":
-			self.zeroid = user[:user.index(":")]
-			self.pub = user[user.index(":")+1:]
+			try:
+				self.zeroid = user[:user.index(":")]
+				self.pub = user[user.index(":")+1:]
+			except ValueError:
+				raise CommandError("Incorrect login")
 
 			zeroid, _, self.priv = zeronet.guess_private_key(zeronet_directory)
 			if zeroid is None:
@@ -29,8 +32,11 @@ class Mailbox(object):
 			elif self.priv is None:
 				raise CommandError("Could not find user passwords")
 		else:
-			self.zeroid = user[:user.index(":")]
-			self.pub = user[user.index(":")+1:]
+			try:
+				self.zeroid = user[:user.index(":")]
+				self.pub = user[user.index(":")+1:]
+			except ValueError:
+				raise CommandError("Incorrect login")
 			self.priv = password
 
 		self.zeromail = ZeroMail(zeronet_directory, zeroid=self.zeroid, pub=self.pub, priv=self.priv)
