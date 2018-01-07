@@ -45,7 +45,7 @@ def sign(address, content, zeronet_directory):
 		users = json.loads(f.read())
 
 		try:
-			user = users[users.keys()]
+			user = users[users.keys()[0]]
 			privatekey = user["certs"]["zeroid.bit"]["auth_privatekey"]
 		except KeyError:
 			raise TypeError("Private key for zeroid.bit not found in users.json")
