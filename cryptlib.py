@@ -6,6 +6,7 @@ Config.config.disable_sslcompression = False
 
 import CryptMessage
 from lib import pyelliptic
+from lib.pybitcointools import bitcoin as btctools
 
 import base64
 
@@ -62,3 +63,9 @@ def aesDecrypt(iv, encrypted_text, key):
 	except Exception, err:
 		pass
 	return None
+
+# Transform private key to public key
+def private_to_public(private):
+	public = btctools.encode_pubkey(btctools.privtopub(private), "bin_compressed")
+	public = base64.b64encode(public)
+	return public
