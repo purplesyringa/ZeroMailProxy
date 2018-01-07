@@ -40,17 +40,18 @@ def guess_public_key(zeronet_directory, zeroid):
 		return None
 
 def sign(address, content, zeronet_directory):
+	privatekey = None
+	with open(zeronet_directory + "data/users.json") as f:
+		users = json.loads(f.read())
+
+		try:
+			user = users[users.keys()]
+			privatekey = user["certs"]["zeroid.bit"]["auth_privatekey"]
+		except KeyError:
+			raise TypeError("Private key for zeroid.bit not found in users.json")
+
 	from Site import Site
 	site = Site(address, allow_create=False)
-
-	from User import UserManager
-	user = UserManager.user_manager.get()
-	if user:
-		privatekey = user.getAuthPrivatekey("1iD5ZQJMNXu43w1qLB8sfdHVKppVMduGz", create=False)
-		if privatekey is None:
-			raise TypeError("Could not find ZeroID private key")
-	else:
-		raise TypeError("Could not find ZeroID private key")
 
 	site.content_manager.sign(
 		inner_path=content,
