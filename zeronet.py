@@ -1,4 +1,4 @@
-import json
+import json, cryptlib
 
 def guess_private_key(zeronet_directory):
 	try:
@@ -11,15 +11,19 @@ def guess_private_key(zeronet_directory):
 			try:
 				zeromail = user["sites"]["1MaiL5gfBM1cyb4a8e3iiL8L5gXmoAJu27"]
 
-				keyname = [key for key in zeromail.keys() if "encrypt_publickey" in key]
-				if len(keyname) != 1:
-					return (zeroid, None, None)
-				publickey = zeromail[keyname[0]]
-
 				keyname = [key for key in zeromail.keys() if "encrypt_privatekey" in key]
 				if len(keyname) != 1:
 					return (zeroid, None, None)
 				privatekey = zeromail[keyname[0]]
+
+				publickey = None
+				keyname = [key for key in zeromail.keys() if "encrypt_publickey" in key]
+				if len(keyname) == 0:
+					publickey = cryptlib.private_to_public(privatekey)
+				elif len(keyname) != 1:
+					return (zeroid, None, None)
+				else:
+					publickey = zeromail[keyname[0]]
 
 				return (zeroid, publickey, privatekey)
 			except (KeyError, TypeError):
