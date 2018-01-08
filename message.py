@@ -7,14 +7,17 @@ class Message(object):
 		raw = json.loads(self.raw)
 
 		self.date = date
-		self.body = raw["body"]
+		self.body = self.unicode_encode(raw["body"])
 		self.to = raw["to"]
 		self.from_ = data["cert_user_id"]
-		self.subject = raw["subject"]
+		self.subject = self.unicode_encode(raw["subject"])
 
-		bts = [ord(char) for char in self.body]
+		self.body = self.from_markdown(self.body)
+
+	def unicode_encode(self, text):
+		bts = [ord(char) for char in text]
 		bts = array.array("B", bts).tostring().decode("utf8")
-		self.body = self.from_markdown(bts)
+		return bts
 
 	def from_markdown(self, text):
 		return markdown.markdown(text)
@@ -34,11 +37,6 @@ class Message(object):
 	def __str__(self):
 		return unicode(self).encode("utf-8")
 	def __unicode__(self):
-		try:
-			self.headers() + u"\r\n" + self.body
-		except UnicodeEncodeError as e:
-			print self.body
-
 		try:
 			return self.headers() + u"\r\n" + self.body
 		except UnicodeEncodeError as e:
