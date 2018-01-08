@@ -24,6 +24,7 @@ Linux:
 $ git clone https://github.com/imachug/ZeroMailProxy
 $ cd ZeroMailProxy
 $ vi config.py
+$ pip install -r requirements.txt
 $ sudo python start_server.py # Run local POP3 and SMTP servers
 ```
 
@@ -32,6 +33,7 @@ Windows:
 > git clone https://github.com/imachug/ZeroMailProxy
 > cd ZeroMailProxy
 > notepad config.py
+> pip install -r requirements.txt
 > python start_server.py # Run local POP3 and SMTP servers
 ```
 
