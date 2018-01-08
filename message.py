@@ -15,9 +15,13 @@ class Message(object):
 		self.body = self.from_markdown(self.body)
 
 	def unicode_encode(self, text):
-		bts = [ord(char) for char in text]
-		bts = array.array("B", bts).tostring().decode("utf8")
-		return bts
+		try:
+			bts = [ord(char) for char in text]
+			bts = array.array("B", bts).tostring().decode("utf8")
+			return bts
+		except OverflowError as e:
+			# Already unicode
+			return text
 
 	def from_markdown(self, text):
 		return markdown.markdown(text)

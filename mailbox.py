@@ -3,7 +3,7 @@ from message import Message
 from config import zeronet_directory
 import zeronet
 from pop3.util import CommandError
-import email, time, datetime, json, re
+import email, time, datetime, json, re, base64
 
 class Mailbox(object):
 	def __init__(self, user, password):
@@ -85,7 +85,7 @@ class Mailbox(object):
 	def send(self, from_, to, data):
 		message = email.message_from_string(data)
 
-		subject = message["Subject"]
+		subject = self.parse_subject(message["Subject"])
 		timestamp = time.mktime(datetime.datetime(*email.utils.parsedate(message["Date"])[:6]).timetuple())
 
 		content = self.walk(message)
@@ -134,6 +134,39 @@ class Mailbox(object):
 		content = message.get_payload(decode=True)
 		content = content.replace("\r\n", "\n")
 		return content
+
+	def parse_subject(self, subject):
+		if subject.startswith("=?") and subject.endswith("?="):
+			subject = subject[2:-2]
+
+			charset = subject[:subject.index("?")]
+			subject = subject[subject.index("?")+1:]
+
+			encoding = subject[:subject.index("?")]
+			subject = subject[subject.index("?")+1:]
+
+			if encoding == "B":
+				return base64.b64decode(subject).decode(charset)
+			elif encoding == "Q":
+				return self.parse_quoted_printable(subject).decode(charset)
+			else:
+				return "<could not decode subject>"
+
+		return subject
+	def parse_quoted_printable(self, subject):
+		res = ""
+		pos = 0
+		while pos < len(subject):
+			if subject[pos] == "=":
+				char = subject[pos+1:pos+3]
+				char = int(char, 16)
+				char = chr(char)
+				res += char
+				pos += 2
+			else:
+				res += subject[pos]
+				pos += 1
+		return res
 
 	def html_to_markdown(self, html):
 		# Remove spaces
