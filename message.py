@@ -22,6 +22,9 @@ class Message(object):
 		except OverflowError as e:
 			# Already unicode
 			return text
+		except UnicodeDecodeError as e:
+			# Already unicode
+			return text
 
 	def from_markdown(self, text):
 		return markdown.markdown(text)
