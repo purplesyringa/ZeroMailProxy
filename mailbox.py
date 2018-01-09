@@ -132,6 +132,13 @@ class Mailbox(object):
 
 	def parse_message(self, message):
 		content = message.get_payload(decode=True)
+
+		try:
+			content = content.decode("utf-8")
+		except (OverflowError, UnicodeDecodeError):
+			# Already unicode
+			return text
+
 		content = content.replace("\r\n", "\n")
 		return content
 

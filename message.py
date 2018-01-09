@@ -19,10 +19,7 @@ class Message(object):
 			bts = [ord(char) for char in text]
 			bts = array.array("B", bts).tostring().decode("utf8")
 			return bts
-		except OverflowError as e:
-			# Already unicode
-			return text
-		except UnicodeDecodeError as e:
+		except (OverflowError, UnicodeDecodeError):
 			# Already unicode
 			return text
 
