@@ -1,7 +1,7 @@
 import os
 import sys
 
-import Config
+import config, Config
 Config.config.disable_sslcompression = False
 
 import CryptMessage

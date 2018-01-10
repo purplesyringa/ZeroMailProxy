@@ -1,4 +1,3 @@
-from config import zeronet_directory
 from mailbox import Mailbox
 import threading
 

@@ -1,8 +1,10 @@
 import json, cryptlib
 
-def guess_private_key(zeronet_directory):
+from config import data_directory
+
+def guess_private_key():
 	try:
-		with open(zeronet_directory + "data/users.json", "r") as f:
+		with open(data_directory + "/users.json", "r") as f:
 			users = json.loads(f.read())
 			user = users[users.keys()[0]]
 
@@ -31,17 +33,17 @@ def guess_private_key(zeronet_directory):
 	except (IOError, KeyError, TypeError):
 		return (None, None, None)
 
-def guess_public_key(zeronet_directory, zeroid):
+def guess_public_key(zeroid):
 	try:
-		with open(zeronet_directory + "data/1MaiL5gfBM1cyb4a8e3iiL8L5gXmoAJu27/data/users/" + zeroid + "/data.json") as f:
+		with open(data_directory + "/1MaiL5gfBM1cyb4a8e3iiL8L5gXmoAJu27/data/users/" + zeroid + "/data.json") as f:
 			data = json.loads(f.read())
 			return data["publickey"]
 	except (IOError, KeyError, TypeError):
 		return None
 
-def sign(address, content, zeronet_directory):
+def sign(address, content):
 	privatekey = None
-	with open(zeronet_directory + "data/users.json") as f:
+	with open(data_directory + "/users.json") as f:
 		users = json.loads(f.read())
 
 		try:
@@ -60,13 +62,12 @@ def sign(address, content, zeronet_directory):
 		remove_missing_optional=False
 	)
 
-def publish(address, content, zeronet_directory):
+def publish(address, content):
 	# Check for lock
 	from util import helper
 
-	data_dir = zeronet_directory.replace("\\", "/") + "data"
 	try:
-		with helper.openLocked("%s/lock.pid" % data_dir, "w") as f:
+		with helper.openLocked("%s/lock.pid" % data_directory, "w") as f:
 			pass
 
 		# Could get lock; let's run normal sitePublish then
@@ -74,14 +75,14 @@ def publish(address, content, zeronet_directory):
 		zeronet_lib.actions.sitePublish(address, inner_path=content)
 	except IOError:
 		# Could not get lock
-		publish_socket(address, content, zeronet_directory=zeronet_directory)
+		publish_socket(address, content)
 
-def publish_socket(address, content, zeronet_directory):
+def publish_socket(address, content):
 	# Publish file via ZeroWebSocket
 
 	# Find wrapper_key in sites.json
 	wrapper_key = None
-	with open(zeronet_directory + "data/sites.json", "r") as f:
+	with open(data_directory + "/sites.json", "r") as f:
 		sites = json.loads(f.read())
 		wrapper_key = sites[address]["wrapper_key"]
 

@@ -1,6 +1,6 @@
 from zeromail import ZeroMail
 from message import Message
-from config import zeronet_directory
+from config import data_directory
 import zeronet
 from pop3.util import CommandError
 import email, time, datetime, json, re, base64
@@ -8,13 +8,13 @@ import email, time, datetime, json, re, base64
 class Mailbox(object):
 	def __init__(self, user, password):
 		if user == "local" and password == "local":
-			self.zeroid, self.pub, self.priv = zeronet.guess_private_key(zeronet_directory)
+			self.zeroid, self.pub, self.priv = zeronet.guess_private_key()
 			if self.zeroid is None:
 				raise CommandError("Failed to access users.json")
 			elif self.pub is None or self.priv is None:
 				raise CommandError("Could not find user passwords")
 		elif user == "local":
-			self.zeroid, self.pub, _ = zeronet.guess_private_key(zeronet_directory)
+			self.zeroid, self.pub, _ = zeronet.guess_private_key()
 			if self.zeroid is None:
 				raise CommandError("Failed to access users.json")
 			elif self.pub is None:
@@ -26,7 +26,7 @@ class Mailbox(object):
 			except ValueError:
 				raise CommandError("Incorrect login")
 
-			zeroid, _, self.priv = zeronet.guess_private_key(zeronet_directory)
+			zeroid, _, self.priv = zeronet.guess_private_key()
 			if zeroid is None:
 				raise CommandError("Failed to access users.json")
 			elif self.priv is None:
@@ -39,7 +39,7 @@ class Mailbox(object):
 				raise CommandError("Incorrect login")
 			self.priv = password
 
-		self.zeromail = ZeroMail(zeronet_directory, zeroid=self.zeroid, pub=self.pub, priv=self.priv)
+		self.zeromail = ZeroMail(zeroid=self.zeroid, pub=self.pub, priv=self.priv)
 		self.message_ids = dict()
 
 	def load_messages(self):

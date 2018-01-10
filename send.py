@@ -1,11 +1,9 @@
 import os, sys, datetime, json, time
 
-from config import zeronet_directory
-
 # Guess private/public keys
 import zeronet
 
-zeroid, publickey, privatekey = zeronet.guess_private_key(zeronet_directory)
+zeroid, publickey, privatekey = zeronet.guess_private_key()
 if zeroid is None:
 	print "Could not access users.json"
 	zeroid = raw_input("ZeroID:")
@@ -21,7 +19,7 @@ else:
 	print "Private key:", privatekey
 
 from zeromail import ZeroMail
-zeromail = ZeroMail(zeronet_directory, zeroid=zeroid, pub=publickey, priv=privatekey)
+zeromail = ZeroMail(zeroid=zeroid, pub=publickey, priv=privatekey)
 
 subject = raw_input("Subject:")
 

@@ -3,15 +3,16 @@ from base64_number import base64_from_number
 
 current_directory = os.path.dirname(os.path.realpath(__file__))
 
+from config import data_directory
+
 
 class ZeroMail(object):
-	def __init__(self, zeronet_directory, zeroid, pub, priv):
-		self.zeronet_directory = zeronet_directory
+	def __init__(self, zeroid, pub, priv):
 		self.zeroid = zeroid
 		self.pubkey = pub
 		self.privkey = priv
 
-		self.zeromail_data = zeronet_directory + "data/1MaiL5gfBM1cyb4a8e3iiL8L5gXmoAJu27/data/users/" + zeroid + "/data.json"
+		self.zeromail_data = data_directory + "/1MaiL5gfBM1cyb4a8e3iiL8L5gXmoAJu27/data/users/" + zeroid + "/data.json"
 		self.cache_directory = current_directory + "/cache/" + base64.b64encode(zeroid)
 		try:
 			os.makedirs(self.cache_directory)
@@ -19,7 +20,7 @@ class ZeroMail(object):
 			if e.errno != errno.EEXIST:
 				raise
 
-		self.conn = sqlite3.connect(zeronet_directory + 'data/1MaiL5gfBM1cyb4a8e3iiL8L5gXmoAJu27/data/users/zeromail.db')
+		self.conn = sqlite3.connect(data_directory + '/1MaiL5gfBM1cyb4a8e3iiL8L5gXmoAJu27/data/users/zeromail.db')
 		self.cursor = self.conn.cursor()
 
 	# Load secrets
@@ -153,7 +154,7 @@ class ZeroMail(object):
 		# Get public key
 		publickey = None
 		try:
-			with open(self.zeronet_directory + "data/1MaiL5gfBM1cyb4a8e3iiL8L5gXmoAJu27/data/users/" + address + "/data.json", "r") as f:
+			with open(data_directory + "/1MaiL5gfBM1cyb4a8e3iiL8L5gXmoAJu27/data/users/" + address + "/data.json", "r") as f:
 				publickey = json.loads(f.read())["publickey"]
 		except IOError:
 			raise TypeError("No public key for " + address)
@@ -202,8 +203,8 @@ class ZeroMail(object):
 			self.sign("1MaiL5gfBM1cyb4a8e3iiL8L5gXmoAJu27", "data/users/" + self.zeroid + "/content.json")
 
 	def sign(self, address, content):
-		zeronet.sign(address, content, zeronet_directory=self.zeronet_directory)
-		zeronet.publish(address, content, zeronet_directory=self.zeronet_directory)
+		zeronet.sign(address, content)
+		zeronet.publish(address, content)
 
 	def zeroid_to_address(self, zeroid):
 		jsons = self.cursor.execute("""
